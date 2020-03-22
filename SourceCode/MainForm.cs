@@ -16,6 +16,7 @@ namespace HID_PnP_Demo
     {
         private System.ComponentModel.BackgroundWorker ReadWriteThread;
         System.Windows.Forms.Timer timer1 = null;
+        private object lockobject = new object();
         public MainForm()
         {
             InitializeComponent();
@@ -145,30 +146,41 @@ namespace HID_PnP_Demo
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
-            //Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
-            //Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
-            //uint BytesWritten = 0;
-            //uint BytesRead = 0;
+            //Clear Old data
+            lock (lockobject)
+            {
+                button3_Click(sender, e);
+                lchartPoint = 0;
+                dgvDataList.Rows.Clear();
+                ReadResult.Clear();
 
-            //if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
-            //{
-            //    OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
-            //    OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
-            //    OUTBuffer[2] = 0xfc;
-            //    OUTBuffer[3] = 21;    //LED on/off控制位        
 
-            //    OUTBuffer[4] = 21;    //LED on/off控制位        
+                Byte[] OUTBuffer = new byte[65];    //Allocate a memory buffer equal to the OUT endpoint size + 1
+                Byte[] INBuffer = new byte[65];     //Allocate a memory buffer equal to the IN endpoint size + 1
+                uint BytesWritten = 0;
+                uint BytesRead = 0;
 
-            //    //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
-            //    if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
-            //    {
-            //        //  button2_Click(null,null);
-            //    }
-            //}
-            //else
-            //{
-            //    MessageHelper.ShowError("设备未连接，请检查！");
-            //}
+                if (AttachedState == true)  //Do not try to use the read/write handles unless the USB device is attached and ready
+                {
+                    OUTBuffer[0] = 0;   //The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+                    OUTBuffer[1] = 0x00;    //READ_POT command (see the firmware source code), gets 10-bit ADC Value
+                    OUTBuffer[2] = 0xfc;
+                    OUTBuffer[3] = 21;    //LED on/off控制位        
+
+                    OUTBuffer[4] = 21;    //LED on/off控制位        
+
+                    //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+                    if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))    //Blocking function, unless an "overlapped" structure is used
+                    {
+                        //  button2_Click(null,null);
+                    }
+                }
+                else
+                {
+                    MessageHelper.ShowError("设备未连接，请检查！");
+                }
+            }
+            
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -176,7 +188,7 @@ namespace HID_PnP_Demo
             //加载的时候就把所有数据读取过来
 
             //logon
-            //button3_Click(sender, e);
+            button3_Click(sender, e);
             //button1_Click(sender, e);
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
@@ -916,12 +928,14 @@ namespace HID_PnP_Demo
                                 //     chart1.ChartAreas[0].AxisX.Maximum = lchartPoint;
                                 // }
                                 // */
-
-                                ReadResult.Add(new DataItem { GH = 1, TestString = System.Text.Encoding.Default.GetString(sINBuffer) });
-                                int index = dgvDataList.Rows.Add();
-                                dgvDataList.Rows[index].Cells["CNUM"].Value = lchartPoint;
-                                dgvDataList.Rows[index].Cells["CTest"].Value = System.Text.Encoding.Default.GetString(sINBuffer);
-                                dgvDataList.Refresh();
+                                lock (lockobject)
+                                {
+                                    ReadResult.Add(new DataItem { GH = 1, TestString = System.Text.Encoding.Default.GetString(sINBuffer) });
+                                    int index = dgvDataList.Rows.Add();
+                                    dgvDataList.Rows[index].Cells["CNUM"].Value = lchartPoint;
+                                    dgvDataList.Rows[index].Cells["CTest"].Value = System.Text.Encoding.Default.GetString(sINBuffer);
+                                    dgvDataList.Refresh();
+                                }
                             }));
                         }
                     } //end of: if(AttachedState == true)
