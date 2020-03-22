@@ -1,0 +1,21 @@
+F:\LC\Drill_2dai\上位机\USB HID C# demo\bin\x86\Debug\HID PnP Demo.exe.config
+F:\LC\Drill_2dai\上位机\USB HID C# demo\bin\x86\Debug\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID C# demo\bin\x86\Debug\HID PnP Demo.pdb
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Debug\HID_PnP_Demo.Form1.resources
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Debug\HID_PnP_Demo.Properties.Resources.resources
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Debug\HID PnP Demo.csproj.GenerateResource.Cache
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Debug\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Debug\HID PnP Demo.pdb
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Debug\HID PnP Demo.csprojResolveAssemblyReference.cache
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\bin\x86\Debug\HID PnP Demo.exe.config
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\obj\x86\Debug\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\obj\x86\Debug\HID PnP Demo.pdb
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\bin\x86\Debug\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\bin\x86\Debug\HID PnP Demo.pdb
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\obj\x86\Debug\HID PnP Demo.csprojResolveAssemblyReference.cache
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\obj\x86\Debug\HID_PnP_Demo.Form1.resources
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\obj\x86\Debug\HID_PnP_Demo.Properties.Resources.resources
+F:\LC\Drill_2dai\上位机\USB HID SEMO_JIAMI\obj\x86\Debug\HID PnP Demo.csproj.GenerateResource.Cache
+F:\LC\Drill_2dai\上位机\USB HID save data\bin\x86\Debug\HID PnP Demo.exe.config
+F:\LC\Drill_2dai\上位机\USB HID save data\obj\x86\Debug\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID save data\obj\x86\Debug\HID PnP Demo.pdb

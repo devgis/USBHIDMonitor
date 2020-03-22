@@ -1,0 +1,50 @@
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\bin\x86\Release\HID PnP Demo.exe.config
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\bin\x86\Release\HID PnP Demo.exe
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\bin\x86\Release\HID PnP Demo.pdb
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID_PnP_Demo.Form1.resources
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID_PnP_Demo.Properties.Resources.resources
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.csproj.GenerateResource.Cache
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.exe
+D:\自编程序与资料\microchip_solutions_v2013-06-15\USB\Device - HID - Custom Demos\PnP Demo - Windows Software\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.pdb
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\bin\x86\Release\HID PnP Demo.exe.config
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.exe
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.pdb
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\bin\x86\Release\HID PnP Demo.exe
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\bin\x86\Release\HID PnP Demo.pdb
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID_PnP_Demo.Form1.resources
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID_PnP_Demo.Properties.Resources.resources
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.csproj.GenerateResource.Cache
+F:\Diy\STM32F103\Microsoft Visual CSharp 2005 Express\obj\x86\Release\HID PnP Demo.csprojResolveAssemblyReference.cache
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\bin\x86\Release\HID PnP Demo.exe.config
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\obj\x86\Release\HID PnP Demo.exe
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\obj\x86\Release\HID PnP Demo.pdb
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\bin\x86\Release\HID PnP Demo.exe
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\bin\x86\Release\HID PnP Demo.pdb
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\obj\x86\Release\HID PnP Demo.csprojResolveAssemblyReference.cache
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\obj\x86\Release\HID_PnP_Demo.Form1.resources
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\obj\x86\Release\HID_PnP_Demo.Properties.Resources.resources
+F:\Diy\STM32F103\USB HID CSharp 2005 Express\obj\x86\Release\HID PnP Demo.csproj.GenerateResource.Cache
+E:\Diy\stm32F103 USB OK\USB HID C#\bin\x86\Release\HID PnP Demo.exe.config
+E:\Diy\stm32F103 USB OK\USB HID C#\obj\x86\Release\HID PnP Demo.exe
+E:\Diy\stm32F103 USB OK\USB HID C#\obj\x86\Release\HID PnP Demo.pdb
+E:\Diy\stm32F103 USB OK\USB HID C# demo\bin\x86\Release\HID PnP Demo.exe.config
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\HID PnP Demo.exe
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\HID PnP Demo.pdb
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\ResolveAssemblyReference.cache
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\HID_PnP_Demo.Form1.resources
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\HID_PnP_Demo.Properties.Resources.resources
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\ResGen.read.1.tlog
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\ResGen.write.1.tlog
+E:\Diy\stm32F103 USB OK\USB HID C# demo\bin\x86\Release\HID PnP Demo.exe
+E:\Diy\stm32F103 USB OK\USB HID C# demo\bin\x86\Release\HID PnP Demo.pdb
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\GenerateResource.read.1.tlog
+E:\Diy\stm32F103 USB OK\USB HID C# demo\obj\x86\Release\GenerateResource.write.1.tlog
+F:\LC\Drill_2dai\上位机\USB HID C# demo\bin\x86\Release\HID PnP Demo.exe.config
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Release\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Release\HID PnP Demo.pdb
+F:\LC\Drill_2dai\上位机\USB HID C# demo\bin\x86\Release\HID PnP Demo.exe
+F:\LC\Drill_2dai\上位机\USB HID C# demo\bin\x86\Release\HID PnP Demo.pdb
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Release\HID PnP Demo.csprojResolveAssemblyReference.cache
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Release\HID_PnP_Demo.Form1.resources
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Release\HID_PnP_Demo.Properties.Resources.resources
+F:\LC\Drill_2dai\上位机\USB HID C# demo\obj\x86\Release\HID PnP Demo.csproj.GenerateResource.Cache
