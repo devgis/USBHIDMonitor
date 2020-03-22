@@ -113,45 +113,71 @@ namespace HID_PnP_Demo
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
-            Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
-            uint BytesWritten = 0;
-            uint BytesRead = 0;
+            //Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
+            //Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            //uint BytesWritten = 0;
+            //uint BytesRead = 0;
 
-            // System.DateTime currentTime = new System.DateTime();
-            time1 = DateTime.Now;
+            //// System.DateTime currentTime = new System.DateTime();
+            //time1 = DateTime.Now;
 
 
-            if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
-            {
-                OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
-                OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
-                OUTBuffer[2] = 0xff;
-                OUTBuffer[3] = 0x00;    //LED on/off控制位        
+            //if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
+            //{
+            //    OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+            //    OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
+            //    OUTBuffer[2] = 0xff;
+            //    OUTBuffer[3] = 0x00;    //LED on/off控制位        
 
-                for (uint i = 4; i < 65; i++)
-                    OUTBuffer[i] = 0;
+            //    for (uint i = 4; i < 65; i++)
+            //        OUTBuffer[i] = 0;
 
-                //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
-                if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
-                {
-                    //  button2_Click(null,null);
-                }
-            }
-            time2 = DateTime.Now;
-            time_temp = time2 - time1;
-            //label1.Text = string.Format("{0}秒{1}毫秒", time_temp.Seconds, time_temp.Milliseconds);
+            //    //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+            //    if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
+            //    {
+            //        //  button2_Click(null,null);
+            //    }
+            //}
+            //time2 = DateTime.Now;
+            //time_temp = time2 - time1;
+            ////label1.Text = string.Format("{0}秒{1}毫秒", time_temp.Seconds, time_temp.Milliseconds);
         }
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
-           
+            //Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
+            //Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            //uint BytesWritten = 0;
+            //uint BytesRead = 0;
+
+            //if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
+            //{
+            //    OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+            //    OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
+            //    OUTBuffer[2] = 0xfc;
+            //    OUTBuffer[3] = 21;    //LED on/off控制位        
+
+            //    OUTBuffer[4] = 21;    //LED on/off控制位        
+
+            //    //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+            //    if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
+            //    {
+            //        //  button2_Click(null,null);
+            //    }
+            //}
+            //else
+            //{
+            //    MessageHelper.ShowError("设备未连接，请检查！");
+            //}
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             //加载的时候就把所有数据读取过来
-            //dgvDataList.DataSource = ReadResult;
+
+            //logon
+            //button3_Click(sender, e);
+            //button1_Click(sender, e);
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
             uint BytesWritten = 0;
@@ -813,7 +839,7 @@ namespace HID_PnP_Demo
                         {
                             //      myevent.WaitOne(300);
                             lchartPoint++;
-                            dgvDataList.Invoke(new MethodInvoker(delegate
+                            this.Invoke(new MethodInvoker(delegate
                             {
                                 
 
@@ -892,8 +918,10 @@ namespace HID_PnP_Demo
                                 // */
 
                                 ReadResult.Add(new DataItem { GH = 1, TestString = System.Text.Encoding.Default.GetString(sINBuffer) });
-                                dgvDataList.DataSource = ReadResult;
-                                //dgvDataList.DataSource = ReadResult;
+                                int index = dgvDataList.Rows.Add();
+                                dgvDataList.Rows[index].Cells["CNUM"].Value = lchartPoint;
+                                dgvDataList.Rows[index].Cells["CTest"].Value = System.Text.Encoding.Default.GetString(sINBuffer);
+                                dgvDataList.Refresh();
                             }));
                         }
                     } //end of: if(AttachedState == true)
@@ -1031,34 +1059,6 @@ namespace HID_PnP_Demo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
-            Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
-            uint BytesWritten = 0;
-            uint BytesRead = 0;
-
-            // System.DateTime currentTime = new System.DateTime();
-            time1 = DateTime.Now;
-
-
-            if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
-            {
-                OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
-                OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
-                OUTBuffer[2] = 0xff;
-                OUTBuffer[3] = 0x00;    //LED on/off控制位        
-
-                for (uint i = 4; i < 65; i++)
-                    OUTBuffer[i] = 0;
-
-                //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
-                if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
-                {
-                    //  button2_Click(null,null);
-                }
-            }
-            time2 = DateTime.Now;
-            time_temp = time2 - time1;
-            //label1.Text = string.Format("{0}秒{1}毫秒", time_temp.Seconds, time_temp.Milliseconds);
 
         }
 
@@ -1220,8 +1220,17 @@ namespace HID_PnP_Demo
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            button3_Click(sender, e);
             timer1.Enabled = false;
+            timer1.Stop();
         }
+
+        private void zgcChart_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
 
 
 
