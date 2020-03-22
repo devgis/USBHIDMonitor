@@ -34,22 +34,23 @@
             this.tsimiFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.lbTitle = new System.Windows.Forms.Label();
+            this.btGenerateCurve = new System.Windows.Forms.Button();
+            this.btClearParam = new System.Windows.Forms.Button();
             this.tlpRightTop = new System.Windows.Forms.TableLayoutPanel();
             this.dgvDataList = new System.Windows.Forms.DataGridView();
-            this.zgcChart = new ZedGraph.ZedGraphControl();
-            this.lbTitle = new System.Windows.Forms.Label();
             this.pRightTopPanel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.zgcChart = new ZedGraph.ZedGraphControl();
             this.CNUM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CDeep = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CZDeep = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CQinJiao = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CSJZT = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btGenerateCurve = new System.Windows.Forms.Button();
-            this.btClearParam = new System.Windows.Forms.Button();
+            this.CTest = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.tlpMain.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -128,6 +129,42 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(669, 392);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
+            // lbTitle
+            // 
+            this.lbTitle.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.lbTitle, 6);
+            this.lbTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbTitle.Font = new System.Drawing.Font("微软雅黑", 16F);
+            this.lbTitle.Location = new System.Drawing.Point(3, 0);
+            this.lbTitle.Name = "lbTitle";
+            this.lbTitle.Size = new System.Drawing.Size(663, 65);
+            this.lbTitle.TabIndex = 0;
+            this.lbTitle.Text = "钻井轨迹基础参数";
+            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btGenerateCurve
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.btGenerateCurve, 2);
+            this.btGenerateCurve.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btGenerateCurve.Location = new System.Drawing.Point(115, 263);
+            this.btGenerateCurve.Name = "btGenerateCurve";
+            this.btGenerateCurve.Size = new System.Drawing.Size(217, 59);
+            this.btGenerateCurve.TabIndex = 1;
+            this.btGenerateCurve.Text = "生成曲线";
+            this.btGenerateCurve.UseVisualStyleBackColor = true;
+            this.btGenerateCurve.Click += new System.EventHandler(this.btGenerateCurve_Click);
+            // 
+            // btClearParam
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.btClearParam, 2);
+            this.btClearParam.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btClearParam.Location = new System.Drawing.Point(338, 263);
+            this.btClearParam.Name = "btClearParam";
+            this.btClearParam.Size = new System.Drawing.Size(217, 59);
+            this.btClearParam.TabIndex = 2;
+            this.btClearParam.Text = "清除参数";
+            this.btClearParam.UseVisualStyleBackColor = true;
+            // 
             // tlpRightTop
             // 
             this.tlpRightTop.ColumnCount = 1;
@@ -156,7 +193,8 @@
             this.CPosition,
             this.CZDeep,
             this.CQinJiao,
-            this.CSJZT});
+            this.CSJZT,
+            this.CTest});
             this.dgvDataList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDataList.Location = new System.Drawing.Point(3, 44);
             this.dgvDataList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -166,6 +204,44 @@
             this.dgvDataList.RowTemplate.Height = 27;
             this.dgvDataList.Size = new System.Drawing.Size(527, 344);
             this.dgvDataList.TabIndex = 0;
+            // 
+            // pRightTopPanel
+            // 
+            this.pRightTopPanel.Controls.Add(this.label3);
+            this.pRightTopPanel.Controls.Add(this.label2);
+            this.pRightTopPanel.Controls.Add(this.label1);
+            this.pRightTopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pRightTopPanel.Location = new System.Drawing.Point(3, 3);
+            this.pRightTopPanel.Name = "pRightTopPanel";
+            this.pRightTopPanel.Size = new System.Drawing.Size(527, 34);
+            this.pRightTopPanel.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(382, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(54, 20);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "日期：";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(221, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 20);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "地点：";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(84, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "工程名称：";
             // 
             // zgcChart
             // 
@@ -184,57 +260,6 @@
             this.zgcChart.Size = new System.Drawing.Size(1206, 529);
             this.zgcChart.TabIndex = 2;
             this.zgcChart.UseExtendedPrintDialog = true;
-            // 
-            // lbTitle
-            // 
-            this.lbTitle.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.lbTitle, 6);
-            this.lbTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbTitle.Font = new System.Drawing.Font("微软雅黑", 16F);
-            this.lbTitle.Location = new System.Drawing.Point(3, 0);
-            this.lbTitle.Name = "lbTitle";
-            this.lbTitle.Size = new System.Drawing.Size(663, 65);
-            this.lbTitle.TabIndex = 0;
-            this.lbTitle.Text = "钻井轨迹基础参数";
-            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // pRightTopPanel
-            // 
-            this.pRightTopPanel.Controls.Add(this.label3);
-            this.pRightTopPanel.Controls.Add(this.label2);
-            this.pRightTopPanel.Controls.Add(this.label1);
-            this.pRightTopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pRightTopPanel.Location = new System.Drawing.Point(3, 3);
-            this.pRightTopPanel.Name = "pRightTopPanel";
-            this.pRightTopPanel.Size = new System.Drawing.Size(527, 34);
-            this.pRightTopPanel.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "工程名称：";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(221, 7);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 20);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "地点：";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(382, 7);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 20);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "日期：";
             // 
             // CNUM
             // 
@@ -290,28 +315,14 @@
             this.CSJZT.Name = "CSJZT";
             this.CSJZT.ReadOnly = true;
             // 
-            // btGenerateCurve
+            // CTest
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.btGenerateCurve, 2);
-            this.btGenerateCurve.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btGenerateCurve.Location = new System.Drawing.Point(115, 263);
-            this.btGenerateCurve.Name = "btGenerateCurve";
-            this.btGenerateCurve.Size = new System.Drawing.Size(216, 59);
-            this.btGenerateCurve.TabIndex = 1;
-            this.btGenerateCurve.Text = "生成曲线";
-            this.btGenerateCurve.UseVisualStyleBackColor = true;
-            this.btGenerateCurve.Click += new System.EventHandler(this.btGenerateCurve_Click);
-            // 
-            // btClearParam
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.btClearParam, 2);
-            this.btClearParam.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btClearParam.Location = new System.Drawing.Point(337, 263);
-            this.btClearParam.Name = "btClearParam";
-            this.btClearParam.Size = new System.Drawing.Size(216, 59);
-            this.btClearParam.TabIndex = 2;
-            this.btClearParam.Text = "清除参数";
-            this.btClearParam.UseVisualStyleBackColor = true;
+            this.CTest.DataPropertyName = "TestString";
+            this.CTest.HeaderText = "测试字符串";
+            this.CTest.MinimumWidth = 6;
+            this.CTest.Name = "CTest";
+            this.CTest.ReadOnly = true;
+            this.CTest.Width = 125;
             // 
             // MainForm
             // 
@@ -327,6 +338,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -357,13 +369,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btGenerateCurve;
+        private System.Windows.Forms.Button btClearParam;
         private System.Windows.Forms.DataGridViewTextBoxColumn CNUM;
         private System.Windows.Forms.DataGridViewTextBoxColumn CDeep;
         private System.Windows.Forms.DataGridViewTextBoxColumn CPosition;
         private System.Windows.Forms.DataGridViewTextBoxColumn CZDeep;
         private System.Windows.Forms.DataGridViewTextBoxColumn CQinJiao;
         private System.Windows.Forms.DataGridViewTextBoxColumn CSJZT;
-        private System.Windows.Forms.Button btGenerateCurve;
-        private System.Windows.Forms.Button btClearParam;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CTest;
     }
 }

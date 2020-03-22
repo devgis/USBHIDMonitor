@@ -15,10 +15,15 @@ namespace HID_PnP_Demo
     public partial class MainForm : Form
     {
         private System.ComponentModel.BackgroundWorker ReadWriteThread;
+        System.Windows.Forms.Timer timer1 = null;
         public MainForm()
         {
             InitializeComponent();
-
+            timer1 = new System.Windows.Forms.Timer(this.components);
+            timer1.Interval = 10;
+            timer1.Enabled = true;
+            timer1.Tick += Timer1_Tick;
+            timer1.Start();
             ReadWriteThread = new BackgroundWorker();
             this.ReadWriteThread.WorkerReportsProgress = true;
             this.ReadWriteThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ReadWriteThread_DoWork);
@@ -94,7 +99,7 @@ namespace HID_PnP_Demo
             else
             {
                 //StatusBox_txtb""x.Text = "Device not found, verify connect/correct firmware";
-                MessageHelper.ShowError("设备未连接！");
+                //MessageHelper.ShowError("设备未连接！");
             }
 
             
@@ -106,8 +111,47 @@ namespace HID_PnP_Demo
             //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
         }
 
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
+            Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            uint BytesWritten = 0;
+            uint BytesRead = 0;
+
+            // System.DateTime currentTime = new System.DateTime();
+            time1 = DateTime.Now;
+
+
+            if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
+            {
+                OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+                OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
+                OUTBuffer[2] = 0xff;
+                OUTBuffer[3] = 0x00;    //LED on/off控制位        
+
+                for (uint i = 4; i < 65; i++)
+                    OUTBuffer[i] = 0;
+
+                //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+                if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
+                {
+                    //  button2_Click(null,null);
+                }
+            }
+            time2 = DateTime.Now;
+            time_temp = time2 - time1;
+            //label1.Text = string.Format("{0}秒{1}毫秒", time_temp.Seconds, time_temp.Milliseconds);
+        }
+
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
+           
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            //加载的时候就把所有数据读取过来
+            //dgvDataList.DataSource = ReadResult;
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
             uint BytesWritten = 0;
@@ -126,7 +170,6 @@ namespace HID_PnP_Demo
                 if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
                 {
                     //  button2_Click(null,null);
-                    //WriteHandleToUSBDevice.Close();
                 }
             }
             else
@@ -702,7 +745,7 @@ namespace HID_PnP_Demo
 
         }
 
-        List<DataItem> ReadResult = null;
+        List<DataItem> ReadResult = new List<DataItem>();
 
         private void ReadWriteThread_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -756,7 +799,7 @@ namespace HID_PnP_Demo
             int i, j, sum, sumget;
             IntPtr a = new IntPtr(100);
             AutoResetEvent myevent = new AutoResetEvent(false);
-            ReadResult = new List<DataItem>();
+            //ReadResult = new List<DataItem>();
             //this.Text = string.Empty;
             while (true)
             {
@@ -770,11 +813,11 @@ namespace HID_PnP_Demo
                         {
                             //      myevent.WaitOne(300);
                             lchartPoint++;
-                            this.Invoke(new MethodInvoker(delegate
+                            dgvDataList.Invoke(new MethodInvoker(delegate
                             {
                                 
 
-                                this.Text += "-" + Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
+                                //this.Text += "-" + Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
                                 //if (BytesRead > 0)
                                 //    textBox2.Text = "";
                                 //textBox11.Text = Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
@@ -848,7 +891,9 @@ namespace HID_PnP_Demo
                                 // }
                                 // */
 
-                                ReadResult.Add(new DataItem { TestString = System.Text.Encoding.Default.GetString(sINBuffer) });
+                                ReadResult.Add(new DataItem { GH = 1, TestString = System.Text.Encoding.Default.GetString(sINBuffer) });
+                                dgvDataList.DataSource = ReadResult;
+                                //dgvDataList.DataSource = ReadResult;
                             }));
                         }
                     } //end of: if(AttachedState == true)
@@ -1173,12 +1218,14 @@ namespace HID_PnP_Demo
 
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            timer1.Enabled = false;
         }
 
-        
+
+
+
 
         //private void button10_Click(object sender, EventArgs e)
         //{
