@@ -16,3 +16,29 @@ C:\Users\liyafei\Documents\WeChat Files\liyafei1985\FileStorage\File\2020-03\USB
 C:\Users\liyafei\Documents\WeChat Files\liyafei1985\FileStorage\File\2020-03\USB HID save data\obj\x86\Debug\USB HID save data.csproj.GenerateResource.cache
 C:\Users\liyafei\Documents\WeChat Files\liyafei1985\FileStorage\File\2020-03\USB HID save data\obj\x86\Debug\HID PnP Demo.exe
 C:\Users\liyafei\Documents\WeChat Files\liyafei1985\FileStorage\File\2020-03\USB HID save data\obj\x86\Debug\HID PnP Demo.pdb
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\USB HID save data.csprojAssemblyReference.cache
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\HID_PnP_Demo.Form1.resources
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\HID_PnP_Demo.MainForm.resources
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\HID_PnP_Demo.Properties.Resources.resources
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\USB HID save data.csproj.GenerateResource.cache
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\HID PnP Demo.exe
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\HID PnP Demo.pdb
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\HID PnP Demo.exe.config
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\HID PnP Demo.exe
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\HID PnP Demo.pdb
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\ZedGraph.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\ZedGraph.xml
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\de\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\es\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\fr\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\hu\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\it\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\ja\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\pt\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\ru\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\sk\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\sv\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\tr\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\zh-cn\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\bin\x86\Debug\zh-tw\ZedGraph.resources.dll
+D:\Work\GitHub\USBHIDMonitor\SourceCode\obj\x86\Debug\USB HID save data.csproj.CopyComplete
