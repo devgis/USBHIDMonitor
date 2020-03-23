@@ -39,6 +39,11 @@
             this.btClearParam = new System.Windows.Forms.Button();
             this.tlpRightTop = new System.Windows.Forms.TableLayoutPanel();
             this.dgvDataList = new System.Windows.Forms.DataGridView();
+            this.pRightTopPanel = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.zgcChart = new ZedGraph.ZedGraphControl();
             this.CNUM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CDeep = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,11 +51,6 @@
             this.CQinJiao = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CSJZT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CTest = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pRightTopPanel = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.zgcChart = new ZedGraph.ZedGraphControl();
             this.menuStrip1.SuspendLayout();
             this.tlpMain.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -67,7 +67,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(1214, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1214, 27);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -76,13 +76,13 @@
             this.tsmiFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsimiFileExit});
             this.tsmiFile.Name = "tsmiFile";
-            this.tsmiFile.Size = new System.Drawing.Size(71, 24);
+            this.tsmiFile.Size = new System.Drawing.Size(58, 21);
             this.tsmiFile.Text = "文件(&F)";
             // 
             // tsimiFileExit
             // 
             this.tsimiFileExit.Name = "tsimiFileExit";
-            this.tsimiFileExit.Size = new System.Drawing.Size(140, 26);
+            this.tsimiFileExit.Size = new System.Drawing.Size(115, 22);
             this.tsimiFileExit.Text = "退出(&E)";
             // 
             // tlpMain
@@ -94,13 +94,13 @@
             this.tlpMain.Controls.Add(this.tlpRightTop, 1, 0);
             this.tlpMain.Controls.Add(this.zgcChart, 0, 1);
             this.tlpMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpMain.Location = new System.Drawing.Point(0, 30);
+            this.tlpMain.Location = new System.Drawing.Point(0, 27);
             this.tlpMain.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 2;
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 400F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMain.Size = new System.Drawing.Size(1214, 939);
+            this.tlpMain.Size = new System.Drawing.Size(1214, 942);
             this.tlpMain.TabIndex = 1;
             // 
             // tableLayoutPanel1
@@ -206,6 +206,63 @@
             this.dgvDataList.Size = new System.Drawing.Size(527, 344);
             this.dgvDataList.TabIndex = 0;
             // 
+            // pRightTopPanel
+            // 
+            this.pRightTopPanel.Controls.Add(this.label3);
+            this.pRightTopPanel.Controls.Add(this.label2);
+            this.pRightTopPanel.Controls.Add(this.label1);
+            this.pRightTopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pRightTopPanel.Location = new System.Drawing.Point(3, 3);
+            this.pRightTopPanel.Name = "pRightTopPanel";
+            this.pRightTopPanel.Size = new System.Drawing.Size(527, 34);
+            this.pRightTopPanel.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(382, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(44, 17);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "日期：";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(221, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(44, 17);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "地点：";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(68, 17);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "工程名称：";
+            // 
+            // zgcChart
+            // 
+            this.tlpMain.SetColumnSpan(this.zgcChart, 2);
+            this.zgcChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.zgcChart.Location = new System.Drawing.Point(4, 405);
+            this.zgcChart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.zgcChart.Name = "zgcChart";
+            this.zgcChart.ScrollGrace = 0D;
+            this.zgcChart.ScrollMaxX = 0D;
+            this.zgcChart.ScrollMaxY = 0D;
+            this.zgcChart.ScrollMaxY2 = 0D;
+            this.zgcChart.ScrollMinX = 0D;
+            this.zgcChart.ScrollMinY = 0D;
+            this.zgcChart.ScrollMinY2 = 0D;
+            this.zgcChart.Size = new System.Drawing.Size(1206, 532);
+            this.zgcChart.TabIndex = 2;
+            this.zgcChart.UseExtendedPrintDialog = true;
+            this.zgcChart.Load += new System.EventHandler(this.zgcChart_Load);
+            // 
             // CNUM
             // 
             this.CNUM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -267,68 +324,12 @@
             this.CTest.MinimumWidth = 6;
             this.CTest.Name = "CTest";
             this.CTest.ReadOnly = true;
+            this.CTest.Visible = false;
             this.CTest.Width = 125;
-            // 
-            // pRightTopPanel
-            // 
-            this.pRightTopPanel.Controls.Add(this.label3);
-            this.pRightTopPanel.Controls.Add(this.label2);
-            this.pRightTopPanel.Controls.Add(this.label1);
-            this.pRightTopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pRightTopPanel.Location = new System.Drawing.Point(3, 3);
-            this.pRightTopPanel.Name = "pRightTopPanel";
-            this.pRightTopPanel.Size = new System.Drawing.Size(527, 34);
-            this.pRightTopPanel.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(382, 7);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 20);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "日期：";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(221, 7);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 20);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "地点：";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "工程名称：";
-            // 
-            // zgcChart
-            // 
-            this.tlpMain.SetColumnSpan(this.zgcChart, 2);
-            this.zgcChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zgcChart.Location = new System.Drawing.Point(4, 405);
-            this.zgcChart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.zgcChart.Name = "zgcChart";
-            this.zgcChart.ScrollGrace = 0D;
-            this.zgcChart.ScrollMaxX = 0D;
-            this.zgcChart.ScrollMaxY = 0D;
-            this.zgcChart.ScrollMaxY2 = 0D;
-            this.zgcChart.ScrollMinX = 0D;
-            this.zgcChart.ScrollMinY = 0D;
-            this.zgcChart.ScrollMinY2 = 0D;
-            this.zgcChart.Size = new System.Drawing.Size(1206, 529);
-            this.zgcChart.TabIndex = 2;
-            this.zgcChart.UseExtendedPrintDialog = true;
-            this.zgcChart.Load += new System.EventHandler(this.zgcChart_Load);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1214, 969);
             this.Controls.Add(this.tlpMain);

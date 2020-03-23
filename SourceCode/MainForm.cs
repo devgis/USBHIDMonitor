@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using ZedGraph;
 
 namespace HID_PnP_Demo
 {
@@ -146,50 +147,87 @@ namespace HID_PnP_Demo
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
-            //Clear Old data
-            lock (lockobject)
+            if (!CheckData())
             {
-                button3_Click(sender, e);
-                lchartPoint = 0;
-                dgvDataList.Rows.Clear();
-                ReadResult.Clear();
-
-
-                Byte[] OUTBuffer = new byte[65];    //Allocate a memory buffer equal to the OUT endpoint size + 1
-                Byte[] INBuffer = new byte[65];     //Allocate a memory buffer equal to the IN endpoint size + 1
-                uint BytesWritten = 0;
-                uint BytesRead = 0;
-
-                if (AttachedState == true)  //Do not try to use the read/write handles unless the USB device is attached and ready
-                {
-                    OUTBuffer[0] = 0;   //The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
-                    OUTBuffer[1] = 0x00;    //READ_POT command (see the firmware source code), gets 10-bit ADC Value
-                    OUTBuffer[2] = 0xfc;
-                    OUTBuffer[3] = 21;    //LED on/off控制位        
-
-                    OUTBuffer[4] = 21;    //LED on/off控制位        
-
-                    //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
-                    if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))    //Blocking function, unless an "overlapped" structure is used
-                    {
-                        //  button2_Click(null,null);
-                    }
-                }
-                else
-                {
-                    MessageHelper.ShowError("设备未连接，请检查！");
-                }
+                MessageHelper.ShowError("缺少帧！");
+                return;
             }
-            
+            else
+            {
+                byte[] arr = IntData();
+                for (int i = 0; i < arr.Length / 24; i++)
+                {
+                    var item = new DataItem
+                    {
+                        GH = BitConverter.ToInt32(arr, i * 24),
+                        Deep = BitConverter.ToSingle(arr, i * 24+4),
+                        Position = BitConverter.ToSingle(arr, i * 24 + 8),
+                        ZDeep = BitConverter.ToSingle(arr, i * 24 + 12),
+                        QingJiao = BitConverter.ToSingle(arr, i * 24 + 16),
+                        SJZT = BitConverter.ToUInt16(arr, 23),
+                        //TestString = System.Text.Encoding.Default.GetString(sINBuffer)
+                    };
+
+                    int index = dgvDataList.Rows.Add();
+                    dgvDataList.Rows[index].Cells["CNUM"].Value = item.GH;
+                    dgvDataList.Rows[index].Cells["CDeep"].Value = item.Deep.ToString("0.00");
+                    dgvDataList.Rows[index].Cells["CPosition"].Value = item.Position.ToString("0.00");
+                    dgvDataList.Rows[index].Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
+                    dgvDataList.Rows[index].Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
+                    dgvDataList.Rows[index].Cells["CSJZT"].Value = item.SJZT;
+                    ReadResult.Add(item);
+                }
+                dgvDataList.Refresh();
+                InitChat();
+            }
+
+            //Clear Old data
+            //lock (lockobject)
+            //{
+            //    button1_Click(sender, e);
+            //    lchartPoint = 0;
+            //    dgvDataList.Rows.Clear();
+            //    ReadResult.Clear();
+
+
+            //    Byte[] OUTBuffer = new byte[65];    //Allocate a memory buffer equal to the OUT endpoint size + 1
+            //    Byte[] INBuffer = new byte[65];     //Allocate a memory buffer equal to the IN endpoint size + 1
+            //    uint BytesWritten = 0;
+            //    uint BytesRead = 0;
+
+            //    if (AttachedState == true)  //Do not try to use the read/write handles unless the USB device is attached and ready
+            //    {
+            //        OUTBuffer[0] = 0;   //The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+            //        OUTBuffer[1] = 0x00;    //READ_POT command (see the firmware source code), gets 10-bit ADC Value
+            //        OUTBuffer[2] = 0xfc;
+            //        OUTBuffer[3] = 21;    //LED on/off控制位        
+
+            //        OUTBuffer[4] = 21;    //LED on/off控制位        
+
+            //        //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+            //        if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))    //Blocking function, unless an "overlapped" structure is used
+            //        {
+            //            //  button2_Click(null,null);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageHelper.ShowError("设备未连接，请检查！");
+            //    }
+            //}
+
         }
+
+        Dictionary<uint, byte[]> DicFrames = new Dictionary<uint, byte[]>();
+        List<DataItem> ReadResult = new List<DataItem>();
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             //加载的时候就把所有数据读取过来
 
-            //logon
-            button3_Click(sender, e);
-            //button1_Click(sender, e);
+            ////logon
+            //button3_Click(sender, e);
+            ////button1_Click(sender, e);
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
             uint BytesWritten = 0;
@@ -215,6 +253,112 @@ namespace HID_PnP_Demo
                 MessageHelper.ShowError("设备未连接，请检查！");
             }
         }
+
+        private void InitChart()
+        { }
+        private bool CheckData()
+        {
+            if (DicFrames.Keys.Count <= 0)
+            {
+                return false;
+            }
+            else
+            {
+                for (UInt16 i = 0; i < DicFrames.Keys.Count; i++)
+                {
+                    if (!DicFrames.ContainsKey(i))
+                    {
+                        //缺帧
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private Byte[] IntData()
+        {
+            List<byte> list = new List<byte>();
+            if (DicFrames.Keys.Count <= 0)
+            {
+                return null;
+            }
+            else
+            {
+                for (UInt16 i = 0; i < DicFrames.Keys.Count; i++)
+                {
+                    if (DicFrames.ContainsKey(i))
+                    {
+                        for (int j  = 0; j < DicFrames[i].Length; j++)
+                        {
+                            list.Add(DicFrames[i][j]);
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("缺帧");
+                    }
+                }
+            }
+            return list.ToArray();
+        }
+
+        private void InitChat()
+        {
+            //加载创建曲线数据
+            //标题相关设置
+            // Deep Position  ZDeep QingJiao SJZT 
+            if (ReadResult.Count < 0)
+            {
+                MessageHelper.ShowError("无数据！");
+                return;
+            }
+            
+
+            zgcChart.GraphPane.CurveList.Clear();
+            zgcChart.GraphPane.Title.Text = "曲线图";
+            //设置X轴说明文字
+            zgcChart.GraphPane.XAxis.Title.Text = "杆号";
+            //设置Y轴说明文字
+            zgcChart.GraphPane.YAxis.Title.Text = "数值";
+            PointPairList listDeep = new PointPairList();
+            PointPairList listPosition = new PointPairList();
+            PointPairList listZDeep = new PointPairList();
+            PointPairList listQingJiao = new PointPairList();
+            PointPairList listSJZT = new PointPairList();
+
+            foreach(var item in ReadResult.OrderBy(p=>p.GH))
+            {
+                listDeep.Add(new PointPair(item.GH,item.Deep));
+                listPosition.Add(new PointPair(item.GH, item.Position));
+                listZDeep.Add(new PointPair(item.GH, item.ZDeep));
+                listQingJiao.Add(new PointPair(item.GH, item.QingJiao));
+                listSJZT.Add(new PointPair(item.GH, item.SJZT));
+            }
+
+            ZedGraph.LineItem[] line = new LineItem[5];
+            line[0]= zgcChart.GraphPane.AddCurve("Deep", listDeep, Color.Red);
+            line[1] = zgcChart.GraphPane.AddCurve("Position", listPosition, Color.Green);
+            line[2] = zgcChart.GraphPane.AddCurve("ZDeep", listZDeep, Color.DarkBlue);
+            line[3] = zgcChart.GraphPane.AddCurve("QingJiao", listQingJiao, Color.Blue);
+            line[4] = zgcChart.GraphPane.AddCurve("SJZT", listSJZT, Color.DarkGray);
+
+            line[0].Symbol.Type = SymbolType.Circle;
+            line[0].Symbol.Size = 2;
+            line[1].Symbol.Type = SymbolType.Circle;
+            line[1].Symbol.Size = 2;
+            line[2].Symbol.Type = SymbolType.Circle;
+            line[2].Symbol.Size = 2;
+            line[3].Symbol.Type = SymbolType.Circle;
+            line[3].Symbol.Size = 2;
+            line[4].Symbol.Type = SymbolType.Circle;
+            line[4].Symbol.Size = 2;
+
+            zgcChart.GraphPane.AxisChange();
+            zgcChart.Refresh();
+
+        }
+
 
         #region USB Methods
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -783,7 +927,7 @@ namespace HID_PnP_Demo
 
         }
 
-        List<DataItem> ReadResult = new List<DataItem>();
+        
 
         private void ReadWriteThread_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -930,11 +1074,41 @@ namespace HID_PnP_Demo
                                 // */
                                 lock (lockobject)
                                 {
-                                    ReadResult.Add(new DataItem { GH = 1, TestString = System.Text.Encoding.Default.GetString(sINBuffer) });
-                                    int index = dgvDataList.Rows.Add();
-                                    dgvDataList.Rows[index].Cells["CNUM"].Value = lchartPoint;
-                                    dgvDataList.Rows[index].Cells["CTest"].Value = System.Text.Encoding.Default.GetString(sINBuffer);
-                                    dgvDataList.Refresh();
+                                    byte length = sINBuffer[2];
+                                    UInt16 index = BitConverter.ToUInt16(new byte[]{ sINBuffer[3], sINBuffer[4] },0); 
+                                    //DataFrame frame = new DataFrame() {
+                                    //    Index = index,
+                                    //    Data = sINBuffer.Skip(5).Take(length).ToArray()
+                                    //};
+                                    if (DicFrames.ContainsKey(index))
+                                    {
+                                        DicFrames[index] = sINBuffer.Skip(5).Take(length-5-4).ToArray();
+                                    }
+                                    else
+                                    {
+                                        DicFrames.Add(index,sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                    }
+                                    //var item = new DataItem
+                                    //{
+                                    //    GH = BitConverter.ToInt32(sINBuffer, 5),
+                                    //    Deep=BitConverter.ToSingle(sINBuffer,9),
+                                    //    Position = BitConverter.ToSingle(sINBuffer,13),
+                                    //    ZDeep = BitConverter.ToSingle(sINBuffer, 17),
+                                    //    QingJiao = BitConverter.ToSingle(sINBuffer, 21),
+                                    //    SJZT = BitConverter.ToUInt16(sINBuffer, 25),
+                                    //    TestString = System.Text.Encoding.Default.GetString(sINBuffer)
+                                    //};
+
+                                    //int index = dgvDataList.Rows.Add();
+                                    //dgvDataList.Rows[index].Cells["CNUM"].Value = item.GH;
+                                    //dgvDataList.Rows[index].Cells["CDeep"].Value = item.Deep.ToString("0.00");
+                                    //dgvDataList.Rows[index].Cells["CPosition"].Value = item.Position.ToString("0.00");
+                                    //dgvDataList.Rows[index].Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
+                                    //dgvDataList.Rows[index].Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
+                                    //dgvDataList.Rows[index].Cells["CSJZT"].Value = item.SJZT;
+                                    //dgvDataList.Rows[index].Cells["CTest"].Value = System.Text.Encoding.Default.GetString(sINBuffer);
+                                    //ReadResult.Add(item);
+                                    //dgvDataList.Refresh();
                                 }
                             }));
                         }
