@@ -360,24 +360,68 @@ namespace HID_PnP_Demo
            
         }
 
-        private bool CheckData()
+        private void ReadOneFrame(int frameNO)
         {
-            if (DicFrames.Keys.Count <= 0)
+            Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
+            Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            uint BytesWritten = 0;
+            uint BytesRead = 0;
+            int j;
+
+            int num = 5;
+            if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
             {
-                return false;
-            }
-            else
-            {
-                for (UInt16 i = 0; i < DicFrames.Keys.Count; i++)
+                OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+                OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
+                OUTBuffer[2] = 0xfc;
+                OUTBuffer[3] = 22;    //LED on/off控制位        
+
+                OUTBuffer[4] = 22;    //LED on/off控制位        
+                j = frameNO;
+                OUTBuffer[num] = Convert.ToByte((j >> 8) & 0x000000ff);
+                num++;
+                OUTBuffer[num] = Convert.ToByte(j & 0x000000ff);
+                num++;
+                //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+                if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
                 {
-                    if (!DicFrames.ContainsKey(i))
-                    {
-                        //缺帧
-                        return false;
-                    }
+                    //  button2_Click(null,null);
                 }
             }
-            return true;
+        }
+
+        private bool CheckData()
+        {
+            int retry = 4;
+            bool result = true;
+            while (retry-->0)
+            {
+                if (DicFrames.Keys.Count <= 0)
+                {
+                    result = false;
+                }
+                else
+                {
+                    for (UInt16 i = 0; i < DicFrames.Keys.Count; i++)
+                    {
+                        if (!DicFrames.ContainsKey(i))
+                        {
+                            //缺帧
+                            result = false;
+                            ReadOneFrame(i);
+                        }
+                    }
+                }
+                if (result)
+                {
+                    return true;
+                }
+                else
+                {
+                    Thread.Sleep(1000);
+                }
+            }
+            return result;
         }
 
         private Byte[] IntData()
@@ -1107,26 +1151,56 @@ namespace HID_PnP_Demo
                 {
                     if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
                     {
-
                         //myevent.WaitOne(300);
                         if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))     //Blocking function, unless an "overlapped" structure is used	
                         {
                             //lchartPoint++;
                             Reading = true;
-                            for (j = 0; j < 64; j++)
-                                sINBuffer[j] = INBuffer[j + 1];
 
-                            lock (lockobject)
+                            if (INBuffer[2] == 22)     //读取单帧
                             {
-                                byte length = sINBuffer[2];
-                                UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
-                                if (DicFrames.ContainsKey(index))
+                                sum = 0;
+                                for (i = 0; i < 60; i++)
                                 {
-                                    DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                    sum = sum + INBuffer[i + 1];
                                 }
-                                else
+
+                                sumget = Convert.ToInt32((INBuffer[61]) + (INBuffer[62] * 0x100) + (INBuffer[63] * 0x10000) + (INBuffer[64] * 0x1000000));
+                                if (sumget == sum)  //通讯OK
                                 {
-                                    DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                    for (j = 0; j < 64; j++)
+                                        sINBuffer[j] = INBuffer[j + 1];
+                                    lock (lockobject)
+                                    {
+                                        byte length = sINBuffer[2];
+                                        UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
+                                        if (DicFrames.ContainsKey(index))
+                                        {
+                                            DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                        }
+                                        else
+                                        {
+                                            DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (j = 0; j < 64; j++)
+                                    sINBuffer[j] = INBuffer[j + 1];
+                                lock (lockobject)
+                                {
+                                    byte length = sINBuffer[2];
+                                    UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
+                                    if (DicFrames.ContainsKey(index))
+                                    {
+                                        DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                    }
+                                    else
+                                    {
+                                        DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                    }
                                 }
                             }
                             Thread.Sleep(5);
