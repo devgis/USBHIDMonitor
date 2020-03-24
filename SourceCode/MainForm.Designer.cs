@@ -39,11 +39,6 @@
             this.btClearParam = new System.Windows.Forms.Button();
             this.tlpRightTop = new System.Windows.Forms.TableLayoutPanel();
             this.dgvDataList = new System.Windows.Forms.DataGridView();
-            this.pRightTopPanel = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.zgcChart = new ZedGraph.ZedGraphControl();
             this.CNUM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CDeep = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,12 +46,37 @@
             this.CQinJiao = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CSJZT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CTest = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pRightTopPanel = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.zgcChart = new ZedGraph.ZedGraphControl();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.btRead = new System.Windows.Forms.Button();
+            this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.tsState = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.tlpMain.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tlpRightTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataList)).BeginInit();
             this.pRightTopPanel.SuspendLayout();
+            this.mainStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -115,6 +135,23 @@
             this.tableLayoutPanel1.Controls.Add(this.lbTitle, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.btGenerateCurve, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.btClearParam, 3, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label5, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label6, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label7, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label8, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label9, 4, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label10, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label11, 4, 3);
+            this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.textBox2, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.textBox3, 5, 1);
+            this.tableLayoutPanel1.Controls.Add(this.textBox4, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.textBox5, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(this.textBox6, 5, 2);
+            this.tableLayoutPanel1.Controls.Add(this.textBox7, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.textBox8, 5, 3);
+            this.tableLayoutPanel1.Controls.Add(this.btRead, 1, 5);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 4);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -164,7 +201,7 @@
             this.btClearParam.TabIndex = 2;
             this.btClearParam.Text = "清除参数";
             this.btClearParam.UseVisualStyleBackColor = true;
-            this.btClearParam.Click += new System.EventHandler(this.button3_Click);
+            this.btClearParam.Click += new System.EventHandler(this.btClearParam_Click);
             // 
             // tlpRightTop
             // 
@@ -205,63 +242,6 @@
             this.dgvDataList.RowTemplate.Height = 27;
             this.dgvDataList.Size = new System.Drawing.Size(527, 344);
             this.dgvDataList.TabIndex = 0;
-            // 
-            // pRightTopPanel
-            // 
-            this.pRightTopPanel.Controls.Add(this.label3);
-            this.pRightTopPanel.Controls.Add(this.label2);
-            this.pRightTopPanel.Controls.Add(this.label1);
-            this.pRightTopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pRightTopPanel.Location = new System.Drawing.Point(3, 3);
-            this.pRightTopPanel.Name = "pRightTopPanel";
-            this.pRightTopPanel.Size = new System.Drawing.Size(527, 34);
-            this.pRightTopPanel.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(382, 7);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 17);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "日期：";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(221, 7);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 17);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "地点：";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "工程名称：";
-            // 
-            // zgcChart
-            // 
-            this.tlpMain.SetColumnSpan(this.zgcChart, 2);
-            this.zgcChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zgcChart.Location = new System.Drawing.Point(4, 405);
-            this.zgcChart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.zgcChart.Name = "zgcChart";
-            this.zgcChart.ScrollGrace = 0D;
-            this.zgcChart.ScrollMaxX = 0D;
-            this.zgcChart.ScrollMaxY = 0D;
-            this.zgcChart.ScrollMaxY2 = 0D;
-            this.zgcChart.ScrollMinX = 0D;
-            this.zgcChart.ScrollMinY = 0D;
-            this.zgcChart.ScrollMinY2 = 0D;
-            this.zgcChart.Size = new System.Drawing.Size(1206, 532);
-            this.zgcChart.TabIndex = 2;
-            this.zgcChart.UseExtendedPrintDialog = true;
-            this.zgcChart.Load += new System.EventHandler(this.zgcChart_Load);
             // 
             // CNUM
             // 
@@ -327,11 +307,232 @@
             this.CTest.Visible = false;
             this.CTest.Width = 125;
             // 
+            // pRightTopPanel
+            // 
+            this.pRightTopPanel.Controls.Add(this.label3);
+            this.pRightTopPanel.Controls.Add(this.label2);
+            this.pRightTopPanel.Controls.Add(this.label1);
+            this.pRightTopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pRightTopPanel.Location = new System.Drawing.Point(3, 3);
+            this.pRightTopPanel.Name = "pRightTopPanel";
+            this.pRightTopPanel.Size = new System.Drawing.Size(527, 34);
+            this.pRightTopPanel.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(382, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(44, 17);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "日期：";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(221, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(44, 17);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "地点：";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(68, 17);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "工程名称：";
+            // 
+            // zgcChart
+            // 
+            this.tlpMain.SetColumnSpan(this.zgcChart, 2);
+            this.zgcChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.zgcChart.Location = new System.Drawing.Point(4, 405);
+            this.zgcChart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.zgcChart.Name = "zgcChart";
+            this.zgcChart.ScrollGrace = 0D;
+            this.zgcChart.ScrollMaxX = 0D;
+            this.zgcChart.ScrollMaxY = 0D;
+            this.zgcChart.ScrollMaxY2 = 0D;
+            this.zgcChart.ScrollMinX = 0D;
+            this.zgcChart.ScrollMinY = 0D;
+            this.zgcChart.ScrollMinY2 = 0D;
+            this.zgcChart.Size = new System.Drawing.Size(1206, 532);
+            this.zgcChart.TabIndex = 2;
+            this.zgcChart.UseExtendedPrintDialog = true;
+            this.zgcChart.Load += new System.EventHandler(this.zgcChart_Load);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 65);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(68, 17);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "钻杆长度：";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(226, 65);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(68, 17);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "钻杆直径：";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(449, 65);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(104, 34);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "钻杆最大标称角度变量：";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 130);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(68, 17);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "管材材质：";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(226, 130);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(68, 17);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "管材直径：";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(449, 130);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(68, 17);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "管材根数：";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 195);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(68, 17);
+            this.label10.TabIndex = 9;
+            this.label10.Text = "穿越总长：";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(449, 195);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(68, 17);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "最大深度：";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox1.Location = new System.Drawing.Point(115, 68);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(105, 23);
+            this.textBox1.TabIndex = 11;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox2.Location = new System.Drawing.Point(338, 68);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(105, 23);
+            this.textBox2.TabIndex = 12;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox3.Location = new System.Drawing.Point(561, 68);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(105, 23);
+            this.textBox3.TabIndex = 13;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox4.Location = new System.Drawing.Point(115, 133);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(105, 23);
+            this.textBox4.TabIndex = 14;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox5.Location = new System.Drawing.Point(338, 133);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(105, 23);
+            this.textBox5.TabIndex = 15;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox6.Location = new System.Drawing.Point(561, 133);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(105, 23);
+            this.textBox6.TabIndex = 16;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox7.Location = new System.Drawing.Point(115, 198);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(105, 23);
+            this.textBox7.TabIndex = 17;
+            // 
+            // textBox8
+            // 
+            this.textBox8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBox8.Location = new System.Drawing.Point(561, 198);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(105, 23);
+            this.textBox8.TabIndex = 18;
+            // 
+            // btRead
+            // 
+            this.btRead.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btRead.Location = new System.Drawing.Point(115, 328);
+            this.btRead.Name = "btRead";
+            this.btRead.Size = new System.Drawing.Size(105, 61);
+            this.btRead.TabIndex = 19;
+            this.btRead.Text = "读数据";
+            this.btRead.UseVisualStyleBackColor = true;
+            this.btRead.Click += new System.EventHandler(this.btRead_Click);
+            // 
+            // mainStatusStrip
+            // 
+            this.mainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsState});
+            this.mainStatusStrip.Location = new System.Drawing.Point(0, 947);
+            this.mainStatusStrip.Name = "mainStatusStrip";
+            this.mainStatusStrip.Size = new System.Drawing.Size(1214, 22);
+            this.mainStatusStrip.TabIndex = 2;
+            this.mainStatusStrip.Text = "statusStrip1";
+            // 
+            // tsState
+            // 
+            this.tsState.Name = "tsState";
+            this.tsState.Size = new System.Drawing.Size(32, 17);
+            this.tsState.Text = "就绪";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1214, 969);
+            this.Controls.Add(this.mainStatusStrip);
             this.Controls.Add(this.tlpMain);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -339,7 +540,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MainForm";
+            this.Text = "数据监视工具";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -352,6 +553,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataList)).EndInit();
             this.pRightTopPanel.ResumeLayout(false);
             this.pRightTopPanel.PerformLayout();
+            this.mainStatusStrip.ResumeLayout(false);
+            this.mainStatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -381,5 +584,24 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CQinJiao;
         private System.Windows.Forms.DataGridViewTextBoxColumn CSJZT;
         private System.Windows.Forms.DataGridViewTextBoxColumn CTest;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.Button btRead;
+        private System.Windows.Forms.StatusStrip mainStatusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel tsState;
     }
 }

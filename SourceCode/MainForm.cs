@@ -149,12 +149,17 @@ namespace HID_PnP_Demo
         {
             if (!CheckData())
             {
-                MessageHelper.ShowError("缺少帧！");
+                MessageHelper.ShowError("数据帧不正确请重读！");
                 return;
             }
             else
             {
                 byte[] arr = IntData();
+                if (arr == null || arr.Length <= 0)
+                {
+                    MessageHelper.ShowError("无数据！");
+                    return;
+                }
                 for (int i = 0; i < arr.Length / 24; i++)
                 {
                     var item = new DataItem
@@ -218,16 +223,57 @@ namespace HID_PnP_Demo
 
         }
 
+        private void btClearParam_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = string.Empty;
+            textBox2.Text = string.Empty;
+            textBox3.Text = string.Empty;
+            textBox4.Text = string.Empty;
+            textBox5.Text = string.Empty;
+            textBox6.Text = string.Empty;
+            textBox7.Text = string.Empty;
+            textBox8.Text = string.Empty;
+        }
+
+        private void btRead_Click(object sender, EventArgs e)
+        {
+            btRead.Invoke(new MethodInvoker(delegate
+            {
+                btRead.Enabled = false;
+            }));
+            dgvDataList.Rows.Clear();
+            zgcChart.GraphPane.CurveList.Clear();
+            ReadData();
+
+            ThreadPool.QueueUserWorkItem(o => {
+                Thread.Sleep(1000);
+                while (Reading)
+                {
+                    //this.Refresh();
+                    Thread.Sleep(1005);
+                }
+                btRead.Invoke(new MethodInvoker(delegate
+                {
+                    btRead.Enabled = true;
+                }));
+                MessageHelper.ShowInfo("数据已加载");
+            });
+            
+        }
+
+        bool Reading = false;
         Dictionary<uint, byte[]> DicFrames = new Dictionary<uint, byte[]>();
         List<DataItem> ReadResult = new List<DataItem>();
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             //加载的时候就把所有数据读取过来
-
-            ////logon
-            //button3_Click(sender, e);
-            ////button1_Click(sender, e);
+            //ReadData();
+        }
+        private void ReadData()
+        {
+            DicFrames = new Dictionary<uint, byte[]>();
+            ReadResult = new List<DataItem>();
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
             uint BytesWritten = 0;
@@ -245,13 +291,11 @@ namespace HID_PnP_Demo
                 //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
                 if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
                 {
-                    //  button2_Click(null,null);
+                    Reading = true;
                 }
             }
-            else
-            {
-                MessageHelper.ShowError("设备未连接，请检查！");
-            }
+
+           
         }
 
         private void InitChart()
@@ -993,125 +1037,51 @@ namespace HID_PnP_Demo
                         //myevent.WaitOne(300);
                         if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))     //Blocking function, unless an "overlapped" structure is used	
                         {
-                            //      myevent.WaitOne(300);
+                            
                             lchartPoint++;
+                            Reading = true;
                             this.Invoke(new MethodInvoker(delegate
                             {
-                                
-
-                                //this.Text += "-" + Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
-                                //if (BytesRead > 0)
-                                //    textBox2.Text = "";
-                                //textBox11.Text = Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
-
-                                if (INBuffer[2] == 21)     //读取全部
-                                {
-                                    //textBox11.Text = Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
-                                }
-
-
-                                if (INBuffer[2] == 20)     //读取帧头
-                                {
-                                    //textBox11.Text = Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
-                                }
-
-                                if (INBuffer[2] == 22)     //读取单帧
-                                {
-                                    //textBox11.Text = Convert.ToString(INBuffer[4] * 256 + INBuffer[5]);
-
-                                    sum = 0;
-                                    for (i = 0; i < 60; i++)
-                                    {
-                                        sum = sum + INBuffer[i + 1];
-                                    }
-
-                                    sumget = Convert.ToInt32((INBuffer[61]) + (INBuffer[62] * 0x100) + (INBuffer[63] * 0x10000) + (INBuffer[64] * 0x1000000));
-                                    if (sumget == sum)  //通讯OK
-                                    {
-                                        i = 0;
-                                        floatbuf[i] = INBuffer[i + 10];
-                                        i++;
-                                        floatbuf[i] = INBuffer[i + 10];
-                                        i++;
-                                        floatbuf[i] = INBuffer[i + 10];
-                                        i++;
-                                        floatbuf[i] = INBuffer[i + 10];
-                                        float deep = BitConverter.ToSingle(floatbuf, 0);
-
-                                        i = 0;
-                                        floatbuf[i] = INBuffer[i + 14];
-                                        i++;
-                                        floatbuf[i] = INBuffer[i + 14];
-                                        i++;
-                                        floatbuf[i] = INBuffer[i + 14];
-                                        i++;
-                                        floatbuf[i] = INBuffer[i + 14];
-                                        float position = BitConverter.ToSingle(floatbuf, 0);
-
-                                    }
-                                }
-                                for (j = 0; j < 64; j++)
-                                    sINBuffer[j] = INBuffer[j + 1];
-
-
-                                //string str = "";
-                                //str = System.Text.Encoding.Default.GetString(sINBuffer);
-
-                                //this.txGet.AppendText(str);
-
-                                //this.txGet.AppendText(Environment.NewLine);
-
-                                ///*
-
-                                ////System.DateTime currentTime = new System.DateTime();
-                                //chart1.Series["Series1"].Points.AddY( INBuffer[4] * 256 + INBuffer[5]);
-                                // if (lchartPoint > lcharPointSet)
-                                // {
-
-                                //     chart1.ChartAreas[0].AxisX.Minimum = lchartPoint - lcharPointSet;
-                                //     chart1.ChartAreas[0].AxisX.Maximum = lchartPoint;
-                                // }
-                                // */
-                                lock (lockobject)
-                                {
-                                    byte length = sINBuffer[2];
-                                    UInt16 index = BitConverter.ToUInt16(new byte[]{ sINBuffer[3], sINBuffer[4] },0); 
-                                    //DataFrame frame = new DataFrame() {
-                                    //    Index = index,
-                                    //    Data = sINBuffer.Skip(5).Take(length).ToArray()
-                                    //};
-                                    if (DicFrames.ContainsKey(index))
-                                    {
-                                        DicFrames[index] = sINBuffer.Skip(5).Take(length-5-4).ToArray();
-                                    }
-                                    else
-                                    {
-                                        DicFrames.Add(index,sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
-                                    }
-                                    //var item = new DataItem
-                                    //{
-                                    //    GH = BitConverter.ToInt32(sINBuffer, 5),
-                                    //    Deep=BitConverter.ToSingle(sINBuffer,9),
-                                    //    Position = BitConverter.ToSingle(sINBuffer,13),
-                                    //    ZDeep = BitConverter.ToSingle(sINBuffer, 17),
-                                    //    QingJiao = BitConverter.ToSingle(sINBuffer, 21),
-                                    //    SJZT = BitConverter.ToUInt16(sINBuffer, 25),
-                                    //    TestString = System.Text.Encoding.Default.GetString(sINBuffer)
-                                    //};
-
-                                    //int index = dgvDataList.Rows.Add();
-                                    //dgvDataList.Rows[index].Cells["CNUM"].Value = item.GH;
-                                    //dgvDataList.Rows[index].Cells["CDeep"].Value = item.Deep.ToString("0.00");
-                                    //dgvDataList.Rows[index].Cells["CPosition"].Value = item.Position.ToString("0.00");
-                                    //dgvDataList.Rows[index].Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
-                                    //dgvDataList.Rows[index].Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
-                                    //dgvDataList.Rows[index].Cells["CSJZT"].Value = item.SJZT;
-                                    //dgvDataList.Rows[index].Cells["CTest"].Value = System.Text.Encoding.Default.GetString(sINBuffer);
-                                    //ReadResult.Add(item);
-                                    //dgvDataList.Refresh();
-                                }
+                                tsState.Text = "Reading";
+                                this.Refresh();
                             }));
+
+                            for (j = 0; j < 64; j++)
+                                sINBuffer[j] = INBuffer[j + 1];
+
+
+
+                            lock (lockobject)
+                            {
+                                byte length = sINBuffer[2];
+                                UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
+                                //DataFrame frame = new DataFrame() {
+                                //    Index = index,
+                                //    Data = sINBuffer.Skip(5).Take(length).ToArray()
+                                //};
+                                if (DicFrames.ContainsKey(index))
+                                {
+                                    DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                }
+                                else
+                                {
+                                    DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                }
+
+                            }
+
+                            this.Invoke(new MethodInvoker(delegate
+                            {
+                                tsState.Text = "OK";
+                                this.Refresh();
+                            }));
+
+                            Reading = false;
                         }
+                        //else
+                        //{
+                        //    MessageHelper.ShowInfo("info");
+                        //}
                     } //end of: if(AttachedState == true)
                     else
                     {
@@ -1418,11 +1388,7 @@ namespace HID_PnP_Demo
 
         }
 
-
-
-
-
-
+       
 
         //private void button10_Click(object sender, EventArgs e)
         //{
