@@ -150,7 +150,7 @@ namespace HID_PnP_Demo
             Reading = true;
             mainStatusStrip.Invoke(new MethodInvoker(delegate
             {
-                tsState.Text = "Reading";
+                tsState.Text = "Reading......";
                 mainStatusStrip.Refresh();
             }));
             btGenerateCurve.Invoke(new MethodInvoker(delegate
@@ -425,6 +425,8 @@ namespace HID_PnP_Demo
             zgcChart.GraphPane.XAxis.Title.Text = "杆号";
             //设置Y轴说明文字
             zgcChart.GraphPane.YAxis.Title.Text = "数值";
+            zgcChart.IsShowPointValues = true;
+            
             PointPairList listDeep = new PointPairList();
             PointPairList listPosition = new PointPairList();
             PointPairList listZDeep = new PointPairList();
@@ -457,12 +459,23 @@ namespace HID_PnP_Demo
             line[3].Symbol.Size = 2;
             line[4].Symbol.Type = SymbolType.Circle;
             line[4].Symbol.Size = 2;
+
+            zgcChart.PointValueEvent += ZgcChart_PointValueEvent;
             zgcChart.Invoke(new MethodInvoker(delegate
             {
                 zgcChart.GraphPane.AxisChange();
                 zgcChart.Refresh();
             }));
         }
+
+        private string ZgcChart_PointValueEvent(ZedGraphControl sender, GraphPane pane, CurveItem curve, int iPt)
+        {
+            PointPair pari = curve[iPt];
+            
+            return string.Format(" 杆号:{1} {0}:{2}", curve.Label.Text, pari.X, pari.Y.ToString("0.00").Replace(".00", "").Replace(".0", ""));
+        }
+
+
 
 
         #region USB Methods
