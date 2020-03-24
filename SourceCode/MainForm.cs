@@ -147,44 +147,106 @@ namespace HID_PnP_Demo
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
-            if (!CheckData())
+            Reading = true;
+            mainStatusStrip.Invoke(new MethodInvoker(delegate
             {
-                MessageHelper.ShowError("数据帧不正确请重读！");
-                return;
-            }
-            else
+                tsState.Text = "Reading";
+                mainStatusStrip.Refresh();
+            }));
+            btGenerateCurve.Invoke(new MethodInvoker(delegate
             {
-                byte[] arr = IntData();
-                if (arr == null || arr.Length <= 0)
+                btGenerateCurve.Enabled = false;
+            }));
+            dgvDataList.Rows.Clear();
+            zgcChart.GraphPane.CurveList.Clear();
+            zgcChart.Invoke(new MethodInvoker(delegate
+            {
+                zgcChart.Refresh();
+            }));
+            ReadData();
+
+            ThreadPool.QueueUserWorkItem(o => {
+                Thread.Sleep(1000);
+                while (Reading)
                 {
-                    MessageHelper.ShowError("无数据！");
+                    //this.Refresh();
+                    Thread.Sleep(1005);
+                }
+                if (!CheckData())
+                {
+                    btGenerateCurve.Invoke(new MethodInvoker(delegate
+                    {
+                        btGenerateCurve.Enabled = true;
+                    }));
+                    mainStatusStrip.Invoke(new MethodInvoker(delegate
+                    {
+                        tsState.Text = "OK";
+                        mainStatusStrip.Refresh();
+                    }));
+                    MessageHelper.ShowError("数据帧不正确请重读！");
                     return;
                 }
-                for (int i = 0; i < arr.Length / 24; i++)
+                else
                 {
-                    var item = new DataItem
+                    byte[] arr = IntData();
+                    if (arr == null || arr.Length <= 0)
                     {
-                        GH = BitConverter.ToInt32(arr, i * 24),
-                        Deep = BitConverter.ToSingle(arr, i * 24+4),
-                        Position = BitConverter.ToSingle(arr, i * 24 + 8),
-                        ZDeep = BitConverter.ToSingle(arr, i * 24 + 12),
-                        QingJiao = BitConverter.ToSingle(arr, i * 24 + 16),
-                        SJZT = BitConverter.ToUInt16(arr, 23),
-                        //TestString = System.Text.Encoding.Default.GetString(sINBuffer)
-                    };
+                        btGenerateCurve.Invoke(new MethodInvoker(delegate
+                        {
+                            btGenerateCurve.Enabled = true;
+                        }));
+                        mainStatusStrip.Invoke(new MethodInvoker(delegate
+                        {
+                            tsState.Text = "OK";
+                            mainStatusStrip.Refresh();
+                        }));
+                        MessageHelper.ShowError("无数据！");
+                        return;
+                    }
+                    for (int i = 0; i < arr.Length / 24; i++)
+                    {
+                        var item = new DataItem
+                        {
+                            GH = BitConverter.ToInt32(arr, i * 24),
+                            Deep = BitConverter.ToSingle(arr, i * 24 + 4),
+                            Position = BitConverter.ToSingle(arr, i * 24 + 8),
+                            ZDeep = BitConverter.ToSingle(arr, i * 24 + 12),
+                            QingJiao = BitConverter.ToSingle(arr, i * 24 + 16),
+                            SJZT = BitConverter.ToUInt16(arr, 23),
+                            //TestString = System.Text.Encoding.Default.GetString(sINBuffer)
+                        };
 
-                    int index = dgvDataList.Rows.Add();
-                    dgvDataList.Rows[index].Cells["CNUM"].Value = item.GH;
-                    dgvDataList.Rows[index].Cells["CDeep"].Value = item.Deep.ToString("0.00");
-                    dgvDataList.Rows[index].Cells["CPosition"].Value = item.Position.ToString("0.00");
-                    dgvDataList.Rows[index].Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
-                    dgvDataList.Rows[index].Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
-                    dgvDataList.Rows[index].Cells["CSJZT"].Value = item.SJZT;
-                    ReadResult.Add(item);
+                        dgvDataList.Invoke(new MethodInvoker(delegate
+                        {
+                            int index = dgvDataList.Rows.Add();
+                            dgvDataList.Rows[index].Cells["CNUM"].Value = item.GH;
+                            dgvDataList.Rows[index].Cells["CDeep"].Value = item.Deep.ToString("0.00");
+                            dgvDataList.Rows[index].Cells["CPosition"].Value = item.Position.ToString("0.00");
+                            dgvDataList.Rows[index].Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
+                            dgvDataList.Rows[index].Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
+                            dgvDataList.Rows[index].Cells["CSJZT"].Value = item.SJZT;
+                            ReadResult.Add(item);
+                        }));
+                        
+                    }
+                    dgvDataList.Invoke(new MethodInvoker(delegate
+                    {
+                        dgvDataList.Refresh();
+                    }));
+
+                    InitChart();
                 }
-                dgvDataList.Refresh();
-                InitChat();
-            }
+                btGenerateCurve.Invoke(new MethodInvoker(delegate
+                {
+                    btGenerateCurve.Enabled = true;
+                }));
+                mainStatusStrip.Invoke(new MethodInvoker(delegate
+                {
+                    tsState.Text = "OK";
+                    mainStatusStrip.Refresh();
+                }));
+            });
+            
 
             //Clear Old data
             //lock (lockobject)
@@ -237,27 +299,27 @@ namespace HID_PnP_Demo
 
         private void btRead_Click(object sender, EventArgs e)
         {
-            btRead.Invoke(new MethodInvoker(delegate
-            {
-                btRead.Enabled = false;
-            }));
-            dgvDataList.Rows.Clear();
-            zgcChart.GraphPane.CurveList.Clear();
-            ReadData();
+            //btRead.Invoke(new MethodInvoker(delegate
+            //{
+            //    btRead.Enabled = false;
+            //}));
+            //dgvDataList.Rows.Clear();
+            //zgcChart.GraphPane.CurveList.Clear();
+            //ReadData();
 
-            ThreadPool.QueueUserWorkItem(o => {
-                Thread.Sleep(1000);
-                while (Reading)
-                {
-                    //this.Refresh();
-                    Thread.Sleep(1005);
-                }
-                btRead.Invoke(new MethodInvoker(delegate
-                {
-                    btRead.Enabled = true;
-                }));
-                MessageHelper.ShowInfo("数据已加载");
-            });
+            //ThreadPool.QueueUserWorkItem(o => {
+            //    Thread.Sleep(1000);
+            //    while (Reading)
+            //    {
+            //        //this.Refresh();
+            //        Thread.Sleep(1005);
+            //    }
+            //    btRead.Invoke(new MethodInvoker(delegate
+            //    {
+            //        btRead.Enabled = true;
+            //    }));
+            //    MessageHelper.ShowInfo("数据已加载");
+            //});
             
         }
 
@@ -298,8 +360,6 @@ namespace HID_PnP_Demo
            
         }
 
-        private void InitChart()
-        { }
         private bool CheckData()
         {
             if (DicFrames.Keys.Count <= 0)
@@ -347,7 +407,7 @@ namespace HID_PnP_Demo
             return list.ToArray();
         }
 
-        private void InitChat()
+        private void InitChart()
         {
             //加载创建曲线数据
             //标题相关设置
@@ -381,11 +441,11 @@ namespace HID_PnP_Demo
             }
 
             ZedGraph.LineItem[] line = new LineItem[5];
-            line[0]= zgcChart.GraphPane.AddCurve("Deep", listDeep, Color.Red);
-            line[1] = zgcChart.GraphPane.AddCurve("Position", listPosition, Color.Green);
-            line[2] = zgcChart.GraphPane.AddCurve("ZDeep", listZDeep, Color.DarkBlue);
-            line[3] = zgcChart.GraphPane.AddCurve("QingJiao", listQingJiao, Color.Blue);
-            line[4] = zgcChart.GraphPane.AddCurve("SJZT", listSJZT, Color.DarkGray);
+            line[0]= zgcChart.GraphPane.AddCurve("深度", listDeep, Color.Red);
+            line[1] = zgcChart.GraphPane.AddCurve("水平距离", listPosition, Color.Green);
+            line[2] = zgcChart.GraphPane.AddCurve("垂直距离", listZDeep, Color.DarkBlue);
+            line[3] = zgcChart.GraphPane.AddCurve("倾角", listQingJiao, Color.Blue);
+            line[4] = zgcChart.GraphPane.AddCurve("数据状态", listSJZT, Color.DarkGray);
 
             line[0].Symbol.Type = SymbolType.Circle;
             line[0].Symbol.Size = 2;
@@ -397,10 +457,11 @@ namespace HID_PnP_Demo
             line[3].Symbol.Size = 2;
             line[4].Symbol.Type = SymbolType.Circle;
             line[4].Symbol.Size = 2;
-
-            zgcChart.GraphPane.AxisChange();
-            zgcChart.Refresh();
-
+            zgcChart.Invoke(new MethodInvoker(delegate
+            {
+                zgcChart.GraphPane.AxisChange();
+                zgcChart.Refresh();
+            }));
         }
 
 
@@ -458,7 +519,7 @@ namespace HID_PnP_Demo
         int[] display = new int[65];
         DateTime time1, time2;
         TimeSpan time_temp;
-        long lchartPoint, lcharPointSet;
+        //long lchartPoint, lcharPointSet;
 
         //Various structure definitions for structures that this code will be using
         internal struct SP_DEVICE_INTERFACE_DATA
@@ -1037,28 +1098,15 @@ namespace HID_PnP_Demo
                         //myevent.WaitOne(300);
                         if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))     //Blocking function, unless an "overlapped" structure is used	
                         {
-                            
-                            lchartPoint++;
+                            //lchartPoint++;
                             Reading = true;
-                            this.Invoke(new MethodInvoker(delegate
-                            {
-                                tsState.Text = "Reading";
-                                this.Refresh();
-                            }));
-
                             for (j = 0; j < 64; j++)
                                 sINBuffer[j] = INBuffer[j + 1];
-
-
 
                             lock (lockobject)
                             {
                                 byte length = sINBuffer[2];
                                 UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
-                                //DataFrame frame = new DataFrame() {
-                                //    Index = index,
-                                //    Data = sINBuffer.Skip(5).Take(length).ToArray()
-                                //};
                                 if (DicFrames.ContainsKey(index))
                                 {
                                     DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
@@ -1067,26 +1115,14 @@ namespace HID_PnP_Demo
                                 {
                                     DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
                                 }
-
                             }
-
-                            this.Invoke(new MethodInvoker(delegate
-                            {
-                                tsState.Text = "OK";
-                                this.Refresh();
-                            }));
-
+                            Thread.Sleep(5);
                             Reading = false;
                         }
-                        //else
-                        //{
-                        //    MessageHelper.ShowInfo("info");
-                        //}
                     } //end of: if(AttachedState == true)
                     else
                     {
-                        Thread.Sleep(5);    //Add a small delay.  Otherwise, this while(true) loop can execute very fast and cause 
-                                            //high CPU utilization, with no particular benefit to the application.
+                        Thread.Sleep(5);
                     }
                 }
                 catch
