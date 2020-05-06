@@ -75,7 +75,7 @@ namespace HID_PnP_Demo
                 {
                     AttachedState = true;       //Let the rest of the PC application know the USB device is connected, and it is safe to read/write to it
                     AttachedButBroken = false;
-                    //StatusBox_txtbx.Text = "Device Found, AttachedState = TRUE";
+                    tsUSB.Text = "已连接";
                 }
                 else //for some reason the device was physically plugged in, but one or both of the read/write handles didn't open successfully...
                 {
@@ -95,12 +95,12 @@ namespace HID_PnP_Demo
 
             if (AttachedState == true)
             {
-                //StatusBox_txtbx.Text = "Device Found, AttachedState = TRUE";
+                tsUSB.Text = "已连接";
                 ReadWriteThread.RunWorkerAsync();
             }
             else
             {
-                //StatusBox_txtb""x.Text = "Device not found, verify connect/correct firmware";
+                tsUSB.Text = "未连接";
                 //MessageHelper.ShowError("设备未连接！");
             }
 
@@ -147,7 +147,14 @@ namespace HID_PnP_Demo
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
+            if (TotalCount <= 0)
+            {
+                MessageHelper.ShowError("请先读取数量！");
+                btGetCount.Focus();
+                return;
+            }
             Reading = true;
+            //totallength = -1;
             mainStatusStrip.Invoke(new MethodInvoker(delegate
             {
                 tsState.Text = "Reading......";
@@ -163,6 +170,15 @@ namespace HID_PnP_Demo
             {
                 zgcChart.Refresh();
             }));
+
+            //ReadDataLength();
+
+
+            //while (totallength<=0)
+            //{
+            //    //this.Refresh();
+            //    Thread.Sleep(1005);
+            //}
             ReadData();
 
             ThreadPool.QueueUserWorkItem(o => {
@@ -227,7 +243,7 @@ namespace HID_PnP_Demo
                             dgvDataList.Rows[index].Cells["CSJZT"].Value = item.SJZT;
                             ReadResult.Add(item);
                         }));
-                        
+
                     }
                     dgvDataList.Invoke(new MethodInvoker(delegate
                     {
@@ -246,6 +262,8 @@ namespace HID_PnP_Demo
                     mainStatusStrip.Refresh();
                 }));
             });
+
+            
             
 
             //Clear Old data
@@ -293,8 +311,6 @@ namespace HID_PnP_Demo
             textBox4.Text = string.Empty;
             textBox5.Text = string.Empty;
             textBox6.Text = string.Empty;
-            textBox7.Text = string.Empty;
-            textBox8.Text = string.Empty;
         }
 
         private void btRead_Click(object sender, EventArgs e)
@@ -324,6 +340,7 @@ namespace HID_PnP_Demo
         }
 
         bool Reading = false;
+        //int totallength = -1;
         Dictionary<uint, byte[]> DicFrames = new Dictionary<uint, byte[]>();
         List<DataItem> ReadResult = new List<DataItem>();
 
@@ -358,6 +375,34 @@ namespace HID_PnP_Demo
             }
 
            
+        }
+
+        private void ReadDataLength()
+        {
+            Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
+            Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            uint BytesWritten = 0;
+            uint BytesRead = 0;
+
+            // System.DateTime currentTime = new System.DateTime();
+            time1 = DateTime.Now;
+
+
+            if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
+            {
+                OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+                OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
+                OUTBuffer[2] = 0xfc;
+                OUTBuffer[3] = 20;    //LED on/off控制位        
+
+                OUTBuffer[4] = 20;    //LED on/off控制位        
+
+                //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+                if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
+                {
+                    //  button2_Click(null,null);
+                }
+            }
         }
 
         private void ReadOneFrame(int frameNO)
@@ -396,19 +441,19 @@ namespace HID_PnP_Demo
             bool result = true;
             while (retry-->0)
             {
-                if (DicFrames.Keys.Count <= 0)
+                if (DicFrames.Keys.Count < TotalCount)
                 {
                     result = false;
                 }
                 else
                 {
-                    for (UInt16 i = 0; i < DicFrames.Keys.Count; i++)
+                    for (UInt16 i = 0; i < TotalCount; i++) //DicFrames.Keys.Count
                     {
                         if (!DicFrames.ContainsKey(i))
                         {
                             //缺帧
-                            result = false;
                             ReadOneFrame(i);
+                            result = false;
                         }
                     }
                 }
@@ -1047,10 +1092,11 @@ namespace HID_PnP_Demo
                             {
                                 AttachedState = true;		//Let the rest of the PC application know the USB device is connected, and it is safe to read/write to it
                                 AttachedButBroken = false;
-                                //StatusBox_txtbx.Text = "Device Found, AttachedState = TRUE";
+                                tsUSB.Text = "已连接";
                             }
                             else //for some reason the device was physically plugged in, but one or both of the read/write handles didn't open successfully...
                             {
+                                tsUSB.Text = "未连接";
                                 AttachedState = false;		//Let the rest of this application known not to read/write to the device.
                                 AttachedButBroken = true;	//Flag so that next time a WM_DEVICECHANGE message occurs, can retry to re-open read/write pipes
                                 if (ErrorStatusWrite == ERROR_SUCCESS)
@@ -1155,18 +1201,50 @@ namespace HID_PnP_Demo
                         if (ReadFileManagedBuffer(ReadHandleToUSBDevice, INBuffer, 65, ref BytesRead, IntPtr.Zero))     //Blocking function, unless an "overlapped" structure is used	
                         {
                             //lchartPoint++;
-                            Reading = true;
 
-                            if (INBuffer[2] == 22)     //读取单帧
+                            if (INBuffer[2] == 20)     //读取帧头
                             {
-                                sum = 0;
-                                for (i = 0; i < 60; i++)
+                                int num = 0;
+                                num = INBuffer[5] * 256 + INBuffer[4];
+                                num = num * 24 / 55;
+                                TotalCount = num;
+                                tbCount.Text = TotalCount.ToString();
+                                ReadCount = false;
+                                btGetCount.Enabled = true;
+                                return;
+                            }
+                            else
+                            {
+                                Reading = true;
+                                if (INBuffer[2] == 22)     //读取单帧
                                 {
-                                    sum = sum + INBuffer[i + 1];
-                                }
+                                    sum = 0;
+                                    for (i = 0; i < 60; i++)
+                                    {
+                                        sum = sum + INBuffer[i + 1];
+                                    }
 
-                                sumget = Convert.ToInt32((INBuffer[61]) + (INBuffer[62] * 0x100) + (INBuffer[63] * 0x10000) + (INBuffer[64] * 0x1000000));
-                                if (sumget == sum)  //通讯OK
+                                    sumget = Convert.ToInt32((INBuffer[61]) + (INBuffer[62] * 0x100) + (INBuffer[63] * 0x10000) + (INBuffer[64] * 0x1000000));
+                                    if (sumget == sum)  //通讯OK
+                                    {
+                                        for (j = 0; j < 64; j++)
+                                            sINBuffer[j] = INBuffer[j + 1];
+                                        lock (lockobject)
+                                        {
+                                            byte length = sINBuffer[2];
+                                            UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
+                                            if (DicFrames.ContainsKey(index))
+                                            {
+                                                DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                            }
+                                            else
+                                            {
+                                                DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                            }
+                                        }
+                                    }
+                                }
+                                else
                                 {
                                     for (j = 0; j < 64; j++)
                                         sINBuffer[j] = INBuffer[j + 1];
@@ -1184,28 +1262,11 @@ namespace HID_PnP_Demo
                                         }
                                     }
                                 }
+                                Thread.Sleep(5);
+                                Reading = false;
                             }
-                            else
-                            {
-                                for (j = 0; j < 64; j++)
-                                    sINBuffer[j] = INBuffer[j + 1];
-                                lock (lockobject)
-                                {
-                                    byte length = sINBuffer[2];
-                                    UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
-                                    if (DicFrames.ContainsKey(index))
-                                    {
-                                        DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
-                                    }
-                                    else
-                                    {
-                                        DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
-                                    }
-                                }
-                            }
-                            Thread.Sleep(5);
-                            Reading = false;
                         }
+                            
                     } //end of: if(AttachedState == true)
                     else
                     {
@@ -1592,6 +1653,144 @@ namespace HID_PnP_Demo
                     //  button2_Click(null,null);
                 }
             }
+        }
+
+        bool ReadCount = false;
+        int TotalCount = 0;
+        private void btGetCount_Click(object sender, EventArgs e)
+        {
+            ReadCount = true;
+            btGetCount.Enabled = false;
+            TotalCount = 0;
+            Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
+            Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            uint BytesWritten = 0;
+            uint BytesRead = 0;
+
+            // System.DateTime currentTime = new System.DateTime();
+            time1 = DateTime.Now;
+
+
+            if (AttachedState == true)	//Do not try to use the read/write handles unless the USB device is attached and ready
+            {
+                OUTBuffer[0] = 0;	//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
+                OUTBuffer[1] = 0x00;	//READ_POT command (see the firmware source code), gets 10-bit ADC Value
+                OUTBuffer[2] = 0xfc;
+                OUTBuffer[3] = 20;    //LED on/off控制位        
+
+                OUTBuffer[4] = 20;    //LED on/off控制位        
+
+                //To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
+                if (WriteFile(WriteHandleToUSBDevice, OUTBuffer, 65, ref BytesWritten, IntPtr.Zero))	//Blocking function, unless an "overlapped" structure is used
+                {
+                    //  button2_Click(null,null);
+                }
+            }
+        }
+
+        private void dgvDataList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+            DataGridViewRow row = dgvDataList.Rows[e.RowIndex];
+            textBox1.Text = row.Cells["CNUM"].Value == null ? string.Empty : row.Cells["CNUM"].Value.ToString();
+            textBox2.Text = row.Cells["CDeep"].Value == null ? string.Empty : row.Cells["CDeep"].Value.ToString();
+            textBox3.Text = row.Cells["CPosition"].Value == null ? string.Empty : row.Cells["CPosition"].Value.ToString();
+            textBox4.Text = row.Cells["CZDeep"].Value == null ? string.Empty : row.Cells["CZDeep"].Value.ToString();
+            textBox5.Text = row.Cells["CQinJiao"].Value == null ? string.Empty : row.Cells["CQinJiao"].Value.ToString();
+            textBox6.Text = row.Cells["CSJZT"].Value == null ? string.Empty : row.Cells["CSJZT"].Value.ToString();
+        }
+
+        private void btEdit_Click(object sender, EventArgs e)
+        {
+            
+            var items= ReadResult.Where(p => textBox1.Text.Equals(p.GH.ToString()));
+            if (items == null|| items.Count()<=0)
+            {
+                MessageHelper.ShowError("找不到数据！");
+            }
+            else
+
+            {
+                var item = items.FirstOrDefault();
+                int deep = 0;
+                float position = 0;
+                float zdeep = 0;
+                float qinjiao = 0;
+                uint sjzt = 0;
+                try
+                {
+                    deep = Convert.ToInt32(textBox2.Text);
+                }
+                catch
+                {
+                    MessageHelper.ShowError("深度必须为整数");
+                    return;
+                }
+                try
+                {
+                    position = Convert.ToSingle(textBox3.Text);
+                }
+                catch
+                {
+                    MessageHelper.ShowError("位置必须为浮点小数");
+                    return;
+                }
+
+                try
+                {
+                    zdeep = Convert.ToSingle(textBox4.Text);
+                }
+                catch
+                {
+                    MessageHelper.ShowError("深度必须为浮点小数");
+                    return;
+                }
+                try
+                {
+                    qinjiao = Convert.ToSingle(textBox5.Text);
+                }
+                catch
+                {
+                    MessageHelper.ShowError("倾角必须为浮点小数");
+                    return;
+                }
+                try
+                {
+                    sjzt = Convert.ToUInt16(textBox6.Text);
+                }
+                catch
+                {
+                    MessageHelper.ShowError("数据状态必须为无符号整数");
+                    return;
+                }
+                
+                item.Deep= deep;
+                item.Position= position ;
+                item.ZDeep= zdeep;
+                item.QingJiao= qinjiao;
+                item.SJZT =sjzt;
+
+                foreach (DataGridViewRow row in dgvDataList.Rows)
+                {
+                    if (row.Cells["CNUM"].Value == null && textBox1.Text.Equals(row.Cells["CNUM"].Value.ToString()))
+                    {
+                        dgvDataList.Invoke(new MethodInvoker(delegate
+                        {
+                            row.Cells["CDeep"].Value = item.Deep.ToString("0.00");
+                            row.Cells["CPosition"].Value = item.Position.ToString("0.00");
+                            row.Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
+                            row.Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
+                            row.Cells["CSJZT"].Value = item.SJZT;
+                        }));
+                    }
+                    
+                }
+                InitChart(); //Refresh();
+            }
+            
         }
 
         private void button7_Click(object sender, EventArgs e)

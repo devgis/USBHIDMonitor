@@ -43,16 +43,12 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
             this.tlpRightTop = new System.Windows.Forms.TableLayoutPanel();
             this.dgvDataList = new System.Windows.Forms.DataGridView();
             this.CNUM = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,6 +65,11 @@
             this.zgcChart = new ZedGraph.ZedGraphControl();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.tsState = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.tbCount = new System.Windows.Forms.TextBox();
+            this.btGetCount = new System.Windows.Forms.Button();
+            this.btEdit = new System.Windows.Forms.Button();
+            this.tsUSB = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.tlpMain.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -131,25 +132,25 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 112F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.Controls.Add(this.btEdit, 5, 3);
+            this.tableLayoutPanel1.Controls.Add(this.btGetCount, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.lbTitle, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btGenerateCurve, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.btClearParam, 3, 4);
+            this.tableLayoutPanel1.Controls.Add(this.btGenerateCurve, 4, 4);
+            this.tableLayoutPanel1.Controls.Add(this.btClearParam, 5, 4);
             this.tableLayoutPanel1.Controls.Add(this.label4, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label5, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.label6, 4, 1);
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.label8, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.label9, 4, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label10, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label11, 4, 3);
             this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBox2, 3, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBox3, 5, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBox4, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.textBox5, 3, 2);
             this.tableLayoutPanel1.Controls.Add(this.textBox6, 5, 2);
-            this.tableLayoutPanel1.Controls.Add(this.textBox7, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.textBox8, 5, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label12, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.tbCount, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 4);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -179,11 +180,10 @@
             // 
             // btGenerateCurve
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.btGenerateCurve, 2);
             this.btGenerateCurve.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btGenerateCurve.Location = new System.Drawing.Point(115, 263);
+            this.btGenerateCurve.Location = new System.Drawing.Point(449, 263);
             this.btGenerateCurve.Name = "btGenerateCurve";
-            this.btGenerateCurve.Size = new System.Drawing.Size(217, 59);
+            this.btGenerateCurve.Size = new System.Drawing.Size(106, 59);
             this.btGenerateCurve.TabIndex = 1;
             this.btGenerateCurve.Text = "生成曲线";
             this.btGenerateCurve.UseVisualStyleBackColor = true;
@@ -191,11 +191,10 @@
             // 
             // btClearParam
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.btClearParam, 2);
             this.btClearParam.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btClearParam.Location = new System.Drawing.Point(338, 263);
+            this.btClearParam.Location = new System.Drawing.Point(561, 263);
             this.btClearParam.Name = "btClearParam";
-            this.btClearParam.Size = new System.Drawing.Size(217, 59);
+            this.btClearParam.Size = new System.Drawing.Size(105, 59);
             this.btClearParam.TabIndex = 2;
             this.btClearParam.Text = "清除参数";
             this.btClearParam.UseVisualStyleBackColor = true;
@@ -206,27 +205,27 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 65);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 17);
+            this.label4.Size = new System.Drawing.Size(44, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "钻杆长度：";
+            this.label4.Text = "杆号：";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(226, 65);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(68, 17);
+            this.label5.Size = new System.Drawing.Size(44, 17);
             this.label5.TabIndex = 4;
-            this.label5.Text = "钻杆直径：";
+            this.label5.Text = "深度：";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(449, 65);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(104, 34);
+            this.label6.Size = new System.Drawing.Size(68, 17);
             this.label6.TabIndex = 5;
-            this.label6.Text = "钻杆最大标称角度变量：";
+            this.label6.Text = "水平距离：";
             // 
             // label7
             // 
@@ -235,16 +234,16 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(68, 17);
             this.label7.TabIndex = 6;
-            this.label7.Text = "管材材质：";
+            this.label7.Text = "垂直距离：";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(226, 130);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(68, 17);
+            this.label8.Size = new System.Drawing.Size(44, 17);
             this.label8.TabIndex = 7;
-            this.label8.Text = "管材直径：";
+            this.label8.Text = "倾角：";
             // 
             // label9
             // 
@@ -253,31 +252,14 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(68, 17);
             this.label9.TabIndex = 8;
-            this.label9.Text = "管材根数：";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(3, 195);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(68, 17);
-            this.label10.TabIndex = 9;
-            this.label10.Text = "穿越总长：";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(449, 195);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(68, 17);
-            this.label11.TabIndex = 10;
-            this.label11.Text = "最大深度：";
+            this.label9.Text = "数据状态：";
             // 
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.textBox1.Location = new System.Drawing.Point(115, 68);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(105, 23);
             this.textBox1.TabIndex = 11;
             // 
@@ -321,22 +303,6 @@
             this.textBox6.Size = new System.Drawing.Size(105, 23);
             this.textBox6.TabIndex = 16;
             // 
-            // textBox7
-            // 
-            this.textBox7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox7.Location = new System.Drawing.Point(115, 198);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(105, 23);
-            this.textBox7.TabIndex = 17;
-            // 
-            // textBox8
-            // 
-            this.textBox8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox8.Location = new System.Drawing.Point(561, 198);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(105, 23);
-            this.textBox8.TabIndex = 18;
-            // 
             // tlpRightTop
             // 
             this.tlpRightTop.ColumnCount = 1;
@@ -376,6 +342,7 @@
             this.dgvDataList.RowTemplate.Height = 27;
             this.dgvDataList.Size = new System.Drawing.Size(527, 344);
             this.dgvDataList.TabIndex = 0;
+            this.dgvDataList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDataList_CellClick);
             // 
             // CNUM
             // 
@@ -501,6 +468,7 @@
             // mainStatusStrip
             // 
             this.mainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsUSB,
             this.tsState});
             this.mainStatusStrip.Location = new System.Drawing.Point(0, 947);
             this.mainStatusStrip.Name = "mainStatusStrip";
@@ -513,6 +481,52 @@
             this.tsState.Name = "tsState";
             this.tsState.Size = new System.Drawing.Size(44, 17);
             this.tsState.Text = "Ready";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 260);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 17);
+            this.label12.TabIndex = 19;
+            this.label12.Text = "总数量";
+            // 
+            // tbCount
+            // 
+            this.tbCount.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbCount.Location = new System.Drawing.Point(115, 263);
+            this.tbCount.Name = "tbCount";
+            this.tbCount.Size = new System.Drawing.Size(105, 23);
+            this.tbCount.TabIndex = 20;
+            this.tbCount.Text = "0";
+            // 
+            // btGetCount
+            // 
+            this.btGetCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btGetCount.Location = new System.Drawing.Point(226, 263);
+            this.btGetCount.Name = "btGetCount";
+            this.btGetCount.Size = new System.Drawing.Size(106, 59);
+            this.btGetCount.TabIndex = 21;
+            this.btGetCount.Text = "读取数量";
+            this.btGetCount.UseVisualStyleBackColor = true;
+            this.btGetCount.Click += new System.EventHandler(this.btGetCount_Click);
+            // 
+            // btEdit
+            // 
+            this.btEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btEdit.Location = new System.Drawing.Point(561, 198);
+            this.btEdit.Name = "btEdit";
+            this.btEdit.Size = new System.Drawing.Size(105, 59);
+            this.btEdit.TabIndex = 22;
+            this.btEdit.Text = "修改数据";
+            this.btEdit.UseVisualStyleBackColor = true;
+            this.btEdit.Click += new System.EventHandler(this.btEdit_Click);
+            // 
+            // tsUSB
+            // 
+            this.tsUSB.Name = "tsUSB";
+            this.tsUSB.Size = new System.Drawing.Size(44, 17);
+            this.tsUSB.Text = "未连接";
             // 
             // MainForm
             // 
@@ -577,17 +591,18 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.StatusStrip mainStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel tsState;
+        private System.Windows.Forms.Button btGetCount;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox tbCount;
+        private System.Windows.Forms.Button btEdit;
+        private System.Windows.Forms.ToolStripStatusLabel tsUSB;
     }
 }
