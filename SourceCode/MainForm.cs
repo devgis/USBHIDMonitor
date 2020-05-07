@@ -151,6 +151,21 @@ namespace HID_PnP_Demo
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
+            if (!AttachedState)
+            {
+                MessageHelper.ShowError("設備未鏈接，請檢查！");
+                return;
+            }
+            if (ReadCount)
+            {
+                MessageHelper.ShowError("讀取數量中請稍後！");
+                return;
+            }
+            if (ReadCount)
+            {
+                MessageHelper.ShowError("讀取數量中請稍後！");
+                return;
+            }
             if (TotalCount <= 0)
             {
                 MessageHelper.ShowError("请先读取数量！");
@@ -1692,8 +1707,12 @@ namespace HID_PnP_Demo
         int TotalCount = 0;
         private void btGetCount_Click(object sender, EventArgs e)
         {
+            if (!AttachedState)
+            {
+                MessageHelper.ShowError("設備未鏈接，請檢查！");
+                return;
+            }
             ReadCount = true;
-            btGetCount.Enabled = false;
             TotalCount = 0;
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
