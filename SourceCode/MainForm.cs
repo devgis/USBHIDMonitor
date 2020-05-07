@@ -26,6 +26,10 @@ namespace HID_PnP_Demo
             timer1.Enabled = true;
             timer1.Tick += Timer1_Tick;
             timer1.Start();
+
+            tsProgress.Minimum = 0;
+            tsProgress.Maximum = 100;
+            tsProgress.Step = 1;
             ReadWriteThread = new BackgroundWorker();
             this.ReadWriteThread.WorkerReportsProgress = true;
             this.ReadWriteThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ReadWriteThread_DoWork);
@@ -153,6 +157,7 @@ namespace HID_PnP_Demo
                 btGetCount.Focus();
                 return;
             }
+            CurrentProgressValue = 0;
             Reading = true;
             //totallength = -1;
             mainStatusStrip.Invoke(new MethodInvoker(delegate
@@ -171,25 +176,25 @@ namespace HID_PnP_Demo
                 zgcChart.Refresh();
             }));
 
-            //ReadDataLength();
-
-
-            //while (totallength<=0)
-            //{
-            //    //this.Refresh();
-            //    Thread.Sleep(1005);
-            //}
             ReadData();
+            DateTime dtStartTime = DateTime.Now;
 
             ThreadPool.QueueUserWorkItem(o => {
                 Thread.Sleep(1000);
                 while (Reading)
                 {
+                    if ((DateTime.Now - dtStartTime).TotalSeconds >= 5)
+                    {
+                        btGenerateCurve.Enabled = true;
+                        MessageHelper.ShowError("讀取數據超時，請稍後重試！");
+                        return;
+                    }
                     //this.Refresh();
                     Thread.Sleep(1005);
                 }
                 if (!CheckData())
                 {
+                    CurrentProgressValue = 0;
                     btGenerateCurve.Invoke(new MethodInvoker(delegate
                     {
                         btGenerateCurve.Enabled = true;
@@ -204,6 +209,7 @@ namespace HID_PnP_Demo
                 }
                 else
                 {
+                    CurrentProgressValue = 90;
                     byte[] arr = IntData();
                     if (arr == null || arr.Length <= 0)
                     {
@@ -249,8 +255,9 @@ namespace HID_PnP_Demo
                     {
                         dgvDataList.Refresh();
                     }));
-
+                    CurrentProgressValue = 95;
                     InitChart();
+                    CurrentProgressValue = 100;
                 }
                 btGenerateCurve.Invoke(new MethodInvoker(delegate
                 {
@@ -301,6 +308,30 @@ namespace HID_PnP_Demo
             //    }
             //}
 
+        }
+
+        public int CurrentProgressValue
+        {
+            get
+            {
+                return tsProgress.Value;
+            }
+
+            set
+            {
+                mainStatusStrip.Invoke(new MethodInvoker(delegate
+                {
+                    tsProgress.Value = value;
+                    if (tsProgress.Value <= 0 || tsProgress.Value >= 100)
+                    {
+                        tsProgress.Visible = false;
+                    }
+                    else
+                    {
+                        tsProgress.Visible = true;
+                    }
+                }));
+            }
         }
 
         private void btClearParam_Click(object sender, EventArgs e)
@@ -1260,8 +1291,10 @@ namespace HID_PnP_Demo
                                         {
                                             DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
                                         }
+                                        
                                     }
                                 }
+                                CurrentProgressValue += 70 / TotalCount;
                                 Thread.Sleep(5);
                                 Reading = false;
                             }

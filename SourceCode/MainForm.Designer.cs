@@ -34,6 +34,8 @@
             this.tsimiFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.btEdit = new System.Windows.Forms.Button();
+            this.btGetCount = new System.Windows.Forms.Button();
             this.lbTitle = new System.Windows.Forms.Label();
             this.btGenerateCurve = new System.Windows.Forms.Button();
             this.btClearParam = new System.Windows.Forms.Button();
@@ -49,6 +51,8 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.tbCount = new System.Windows.Forms.TextBox();
             this.tlpRightTop = new System.Windows.Forms.TableLayoutPanel();
             this.dgvDataList = new System.Windows.Forms.DataGridView();
             this.CNUM = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -64,12 +68,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.zgcChart = new ZedGraph.ZedGraphControl();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.tsState = new System.Windows.Forms.ToolStripStatusLabel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.tbCount = new System.Windows.Forms.TextBox();
-            this.btGetCount = new System.Windows.Forms.Button();
-            this.btEdit = new System.Windows.Forms.Button();
             this.tsUSB = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsState = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.menuStrip1.SuspendLayout();
             this.tlpMain.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -164,6 +165,28 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(669, 392);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // btEdit
+            // 
+            this.btEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btEdit.Location = new System.Drawing.Point(561, 198);
+            this.btEdit.Name = "btEdit";
+            this.btEdit.Size = new System.Drawing.Size(105, 59);
+            this.btEdit.TabIndex = 22;
+            this.btEdit.Text = "修改数据";
+            this.btEdit.UseVisualStyleBackColor = true;
+            this.btEdit.Click += new System.EventHandler(this.btEdit_Click);
+            // 
+            // btGetCount
+            // 
+            this.btGetCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btGetCount.Location = new System.Drawing.Point(226, 263);
+            this.btGetCount.Name = "btGetCount";
+            this.btGetCount.Size = new System.Drawing.Size(106, 59);
+            this.btGetCount.TabIndex = 21;
+            this.btGetCount.Text = "读取数量";
+            this.btGetCount.UseVisualStyleBackColor = true;
+            this.btGetCount.Click += new System.EventHandler(this.btGetCount_Click);
             // 
             // lbTitle
             // 
@@ -302,6 +325,24 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(105, 23);
             this.textBox6.TabIndex = 16;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 260);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 17);
+            this.label12.TabIndex = 19;
+            this.label12.Text = "总数量";
+            // 
+            // tbCount
+            // 
+            this.tbCount.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbCount.Location = new System.Drawing.Point(115, 263);
+            this.tbCount.Name = "tbCount";
+            this.tbCount.Size = new System.Drawing.Size(105, 23);
+            this.tbCount.TabIndex = 20;
+            this.tbCount.Text = "0";
             // 
             // tlpRightTop
             // 
@@ -469,12 +510,19 @@
             // 
             this.mainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsUSB,
-            this.tsState});
+            this.tsState,
+            this.tsProgress});
             this.mainStatusStrip.Location = new System.Drawing.Point(0, 947);
             this.mainStatusStrip.Name = "mainStatusStrip";
             this.mainStatusStrip.Size = new System.Drawing.Size(1214, 22);
             this.mainStatusStrip.TabIndex = 2;
             this.mainStatusStrip.Text = "statusStrip1";
+            // 
+            // tsUSB
+            // 
+            this.tsUSB.Name = "tsUSB";
+            this.tsUSB.Size = new System.Drawing.Size(44, 17);
+            this.tsUSB.Text = "未连接";
             // 
             // tsState
             // 
@@ -482,51 +530,11 @@
             this.tsState.Size = new System.Drawing.Size(44, 17);
             this.tsState.Text = "Ready";
             // 
-            // label12
+            // tsProgress
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 260);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(44, 17);
-            this.label12.TabIndex = 19;
-            this.label12.Text = "总数量";
-            // 
-            // tbCount
-            // 
-            this.tbCount.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tbCount.Location = new System.Drawing.Point(115, 263);
-            this.tbCount.Name = "tbCount";
-            this.tbCount.Size = new System.Drawing.Size(105, 23);
-            this.tbCount.TabIndex = 20;
-            this.tbCount.Text = "0";
-            // 
-            // btGetCount
-            // 
-            this.btGetCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btGetCount.Location = new System.Drawing.Point(226, 263);
-            this.btGetCount.Name = "btGetCount";
-            this.btGetCount.Size = new System.Drawing.Size(106, 59);
-            this.btGetCount.TabIndex = 21;
-            this.btGetCount.Text = "读取数量";
-            this.btGetCount.UseVisualStyleBackColor = true;
-            this.btGetCount.Click += new System.EventHandler(this.btGetCount_Click);
-            // 
-            // btEdit
-            // 
-            this.btEdit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btEdit.Location = new System.Drawing.Point(561, 198);
-            this.btEdit.Name = "btEdit";
-            this.btEdit.Size = new System.Drawing.Size(105, 59);
-            this.btEdit.TabIndex = 22;
-            this.btEdit.Text = "修改数据";
-            this.btEdit.UseVisualStyleBackColor = true;
-            this.btEdit.Click += new System.EventHandler(this.btEdit_Click);
-            // 
-            // tsUSB
-            // 
-            this.tsUSB.Name = "tsUSB";
-            this.tsUSB.Size = new System.Drawing.Size(44, 17);
-            this.tsUSB.Text = "未连接";
+            this.tsProgress.Name = "tsProgress";
+            this.tsProgress.Size = new System.Drawing.Size(100, 16);
+            this.tsProgress.Visible = false;
             // 
             // MainForm
             // 
@@ -604,5 +612,6 @@
         private System.Windows.Forms.TextBox tbCount;
         private System.Windows.Forms.Button btEdit;
         private System.Windows.Forms.ToolStripStatusLabel tsUSB;
+        private System.Windows.Forms.ToolStripProgressBar tsProgress;
     }
 }
