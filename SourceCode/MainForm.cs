@@ -26,10 +26,6 @@ namespace HID_PnP_Demo
             timer1.Enabled = true;
             timer1.Tick += Timer1_Tick;
             timer1.Start();
-
-            tsProgress.Minimum = 0;
-            tsProgress.Maximum = 100;
-            tsProgress.Step = 1;
             ReadWriteThread = new BackgroundWorker();
             this.ReadWriteThread.WorkerReportsProgress = true;
             this.ReadWriteThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ReadWriteThread_DoWork);
@@ -79,7 +75,7 @@ namespace HID_PnP_Demo
                 {
                     AttachedState = true;       //Let the rest of the PC application know the USB device is connected, and it is safe to read/write to it
                     AttachedButBroken = false;
-                    tsUSB.Text = "已连接";
+                    //StatusBox_txtbx.Text = "Device Found, AttachedState = TRUE";
                 }
                 else //for some reason the device was physically plugged in, but one or both of the read/write handles didn't open successfully...
                 {
@@ -99,12 +95,12 @@ namespace HID_PnP_Demo
 
             if (AttachedState == true)
             {
-                tsUSB.Text = "已连接";
+                //StatusBox_txtbx.Text = "Device Found, AttachedState = TRUE";
                 ReadWriteThread.RunWorkerAsync();
             }
             else
             {
-                tsUSB.Text = "未连接";
+                //StatusBox_txtb""x.Text = "Device not found, verify connect/correct firmware";
                 //MessageHelper.ShowError("设备未连接！");
             }
 
@@ -151,29 +147,20 @@ namespace HID_PnP_Demo
 
         private void btGenerateCurve_Click(object sender, EventArgs e)
         {
-            if (!AttachedState)
-            {
-                MessageHelper.ShowError("設備未鏈接，請檢查！");
-                return;
-            }
-            if (ReadCount)
-            {
-                MessageHelper.ShowError("讀取數量中請稍後！");
-                return;
-            }
-            if (ReadCount)
-            {
-                MessageHelper.ShowError("讀取數量中請稍後！");
-                return;
-            }
-            if (TotalCount <= 0)
-            {
-                MessageHelper.ShowError("请先读取数量！");
-                btGetCount.Focus();
-                return;
-            }
-            CurrentProgressValue = 0;
             Reading = true;
+            Byte[] arr2 = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            int sum,getbuf;
+            bool result = false;
+
+
+            float fa ;
+            float deep;
+            float qinjiao;
+            int num ;
+            float position ;
+            float zdepth;
+
+
             //totallength = -1;
             mainStatusStrip.Invoke(new MethodInvoker(delegate
             {
@@ -191,25 +178,63 @@ namespace HID_PnP_Demo
                 zgcChart.Refresh();
             }));
 
-            ReadData();
-            DateTime dtStartTime = DateTime.Now;
+            //ReadDataLength();
 
+
+            //while (totallength<=0)
+            //{
+            //    //this.Refresh();
+            //    Thread.Sleep(1005);
+            //}
+            ReadData();
+
+            getbuf = 0;
             ThreadPool.QueueUserWorkItem(o => {
                 Thread.Sleep(1000);
-                while (Reading)
+                for (int i = 0; i < 5; i++)
                 {
-                    if ((DateTime.Now - dtStartTime).TotalSeconds >= 5)
+                    if (Reading)
                     {
-                        btGenerateCurve.Enabled = true;
-                        MessageHelper.ShowError("讀取數據超時，請稍後重試！");
-                        return;
+                        Thread.Sleep(1005);
                     }
-                    //this.Refresh();
-                    Thread.Sleep(1005);
+                    else
+                    {
+                        result = true;
+                    }
                 }
-                if (!CheckData())
+                /*
+                if (result == true)
                 {
-                    CurrentProgressValue = 0;
+                    getbuf = 0;
+                    for (int i = 0; i < TotalCount; i++)
+                    {
+                        if (revval[i, 24] == 0x10)
+                        {
+                            getbuf++;
+                        }
+                    }
+
+                    while (TotalCount > getbuf)
+                    {
+                        CheckData();
+                        getbuf = 0;
+                        for (int i = 0; i < TotalCount; i++)
+                        {
+                            if (revval[i, 24] == 0x10)
+                            {
+                                getbuf++;
+                            }
+                        }
+                    }
+                }
+                */
+
+
+
+                result = true;
+                if (!result)
+                {
+                    revval[1, 1] = 1;
                     btGenerateCurve.Invoke(new MethodInvoker(delegate
                     {
                         btGenerateCurve.Enabled = true;
@@ -224,32 +249,61 @@ namespace HID_PnP_Demo
                 }
                 else
                 {
-                    CurrentProgressValue = 90;
-                    byte[] arr = IntData();
-                    if (arr == null || arr.Length <= 0)
+
+                    /*
+
+                    fa = 0;
+                    for (i = 0; i < 120; i++)
                     {
-                        btGenerateCurve.Invoke(new MethodInvoker(delegate
-                        {
-                            btGenerateCurve.Enabled = true;
-                        }));
-                        mainStatusStrip.Invoke(new MethodInvoker(delegate
-                        {
-                            tsState.Text = "OK";
-                            mainStatusStrip.Refresh();
-                        }));
-                        MessageHelper.ShowError("无数据！");
-                        return;
+                        fa += 2.7;
+                        savedatabuf[i].deep = i + fa;
+                        savedatabuf[i].qinjiao = fa;
+                        savedatabuf[i].num = i;
+                        savedatabuf[i].position = fa + i + fa;
+                        savedatabuf[i].zdepth = fa + i + 3.23;
+                        savedatabuf[i].shujustatus = 0;
                     }
-                    for (int i = 0; i < arr.Length / 24; i++)
+                    //   savedatahead[0].length = 3;
+                    savedatahead[0].num = 65;
+                    */
+                    TotalCount = 65;
+                    fa = 2.7f;
+                    for (int i = 0; i < TotalCount; i++)
                     {
+                        for (int j = 0; j < 24; j++)
+                        {
+                            arr2[j] = revval[i, j];
+                        }
+
+
+                        fa += 2.7f;
+                        deep = i + fa;
+                        qinjiao = fa;
+                        num = i;
+                        position = fa + i + fa;
+                        zdepth = fa + i + 3.23f;
+
+                        if (i == 2)
+                        {
+                            qinjiao = 10000;
+                            position = 10000;
+                            zdepth = 10000;
+                        }
+
+                        if (i == 4)
+                        {
+                            deep = 10000;
+                        }
+
+
                         var item = new DataItem
                         {
-                            GH = BitConverter.ToInt32(arr, i * 24),
-                            Deep = BitConverter.ToSingle(arr, i * 24 + 4),
-                            Position = BitConverter.ToSingle(arr, i * 24 + 8),
-                            ZDeep = BitConverter.ToSingle(arr, i * 24 + 12),
-                            QingJiao = BitConverter.ToSingle(arr, i * 24 + 16),
-                            SJZT = BitConverter.ToUInt16(arr, 23),
+                            GH = num,
+                            Deep = deep,
+                            Position = position,
+                            ZDeep = zdepth,
+                            QingJiao = qinjiao,
+                            SJZT = BitConverter.ToUInt16(arr2, 23),
                             //TestString = System.Text.Encoding.Default.GetString(sINBuffer)
                         };
 
@@ -270,9 +324,8 @@ namespace HID_PnP_Demo
                     {
                         dgvDataList.Refresh();
                     }));
-                    CurrentProgressValue = 95;
+
                     InitChart();
-                    CurrentProgressValue = 100;
                 }
                 btGenerateCurve.Invoke(new MethodInvoker(delegate
                 {
@@ -325,30 +378,6 @@ namespace HID_PnP_Demo
 
         }
 
-        public int CurrentProgressValue
-        {
-            get
-            {
-                return tsProgress.Value;
-            }
-
-            set
-            {
-                mainStatusStrip.Invoke(new MethodInvoker(delegate
-                {
-                    tsProgress.Value = value;
-                    if (tsProgress.Value <= 0 || tsProgress.Value >= 100)
-                    {
-                        tsProgress.Visible = false;
-                    }
-                    else
-                    {
-                        tsProgress.Visible = true;
-                    }
-                }));
-            }
-        }
-
         private void btClearParam_Click(object sender, EventArgs e)
         {
             textBox1.Text = string.Empty;
@@ -357,6 +386,8 @@ namespace HID_PnP_Demo
             textBox4.Text = string.Empty;
             textBox5.Text = string.Empty;
             textBox6.Text = string.Empty;
+            textBox7.Text = string.Empty;
+            textBox8.Text = string.Empty;
         }
 
         private void btRead_Click(object sender, EventArgs e)
@@ -389,6 +420,10 @@ namespace HID_PnP_Demo
         //int totallength = -1;
         Dictionary<uint, byte[]> DicFrames = new Dictionary<uint, byte[]>();
         List<DataItem> ReadResult = new List<DataItem>();
+
+        byte[,] revval = new byte[500,40];//发送计数
+        int read_buf_num = 0;
+
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -484,26 +519,21 @@ namespace HID_PnP_Demo
         private bool CheckData()
         {
             int retry = 4;
-            bool result = true;
-            while (retry-->0)
+
+            for (int i = 0; i < TotalCount; i++)
             {
-                if (DicFrames.Keys.Count < TotalCount)
+                if (revval[i, 24] != 0x10)
                 {
-                    result = false;
+                    //缺帧
+                    Reading = true;
+                    ReadOneFrame(i);
                 }
-                else
-                {
-                    for (UInt16 i = 0; i < TotalCount; i++) //DicFrames.Keys.Count
-                    {
-                        if (!DicFrames.ContainsKey(i))
-                        {
-                            //缺帧
-                            ReadOneFrame(i);
-                            result = false;
-                        }
-                    }
-                }
-                if (result)
+            }
+
+
+            while (retry-- > 0)
+            {
+                if (!Reading)
                 {
                     return true;
                 }
@@ -512,7 +542,7 @@ namespace HID_PnP_Demo
                     Thread.Sleep(1000);
                 }
             }
-            return result;
+            return false;
         }
 
         private Byte[] IntData()
@@ -1138,11 +1168,10 @@ namespace HID_PnP_Demo
                             {
                                 AttachedState = true;		//Let the rest of the PC application know the USB device is connected, and it is safe to read/write to it
                                 AttachedButBroken = false;
-                                tsUSB.Text = "已连接";
+                                //StatusBox_txtbx.Text = "Device Found, AttachedState = TRUE";
                             }
                             else //for some reason the device was physically plugged in, but one or both of the read/write handles didn't open successfully...
                             {
-                                tsUSB.Text = "未连接";
                                 AttachedState = false;		//Let the rest of this application known not to read/write to the device.
                                 AttachedButBroken = true;	//Flag so that next time a WM_DEVICECHANGE message occurs, can retry to re-open read/write pipes
                                 if (ErrorStatusWrite == ERROR_SUCCESS)
@@ -1181,8 +1210,10 @@ namespace HID_PnP_Demo
 
         }
 
-        
 
+
+        bool ReadCount = false;
+        int TotalCount = 0;
         private void ReadWriteThread_DoWork(object sender, DoWorkEventArgs e)
         {
             //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1227,8 +1258,9 @@ namespace HID_PnP_Demo
             Byte[] INBuffer = new byte[65];     //Allocate a memory buffer equal to the IN endpoint size + 1
             Byte[] sINBuffer = new byte[65];        //Allocate a memory buffer equal to the IN endpoint size + 1
             Byte[] getbuf = new byte[300];		//Allocate a memory buffer equal to the IN endpoint size + 1
-            Byte[] floatbuf = new byte[4];		//Allocate a memory buffer equal to the IN endpoint size + 1
+            Byte[] floatbuf = new byte[4];      //Allocate a memory buffer equal to the IN endpoint size + 1
 
+            string str;
 
             uint BytesWritten = 0;
             uint BytesRead = 0;
@@ -1252,11 +1284,18 @@ namespace HID_PnP_Demo
                             {
                                 int num = 0;
                                 num = INBuffer[5] * 256 + INBuffer[4];
-                                num = num * 24 / 55;
+                            //    num = num * 24 / 55;
                                 TotalCount = num;
-                                tbCount.Text = TotalCount.ToString();
+                                str = num.ToString();
+
+                                lock (lockobject)
+                                {
+                        //            tb_num.Enabled = true;
+                       //             tb_num.Text = str;
+                                    textBox7.Text = str;
+                                }
                                 ReadCount = false;
-                                btGetCount.Enabled = true;
+                 //               btGetCount.Enabled = true;
                                 return;
                             }
                             else
@@ -1279,6 +1318,32 @@ namespace HID_PnP_Demo
                                         {
                                             byte length = sINBuffer[2];
                                             UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
+
+
+
+                                            if (index < 300)
+                                            {
+                                                for (j = 0; j < 24; j++)
+                                                {
+                                                    revval[index, j] = sINBuffer[5 + j];
+                                                }
+                                                revval[index, j] = 0x10;
+                                                for (j = 0; j < 24; j++)
+                                                {
+                                                    revval[index + 1, j] = sINBuffer[5 + j + 24];
+                                                }
+                                                revval[index + 1, j] = 0x10;
+                                            }
+
+
+
+
+
+
+
+
+
+
                                             if (DicFrames.ContainsKey(index))
                                             {
                                                 DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
@@ -1292,24 +1357,52 @@ namespace HID_PnP_Demo
                                 }
                                 else
                                 {
-                                    for (j = 0; j < 64; j++)
-                                        sINBuffer[j] = INBuffer[j + 1];
-                                    lock (lockobject)
+
+
+                                    sum = 0;
+                                    for (i = 0; i < 60; i++)
                                     {
-                                        byte length = sINBuffer[2];
-                                        UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
-                                        if (DicFrames.ContainsKey(index))
+                                        sum = sum + INBuffer[i + 1];
+                                    }
+
+                                    sumget = Convert.ToInt32((INBuffer[61]) + (INBuffer[62] * 0x100) + (INBuffer[63] * 0x10000) + (INBuffer[64] * 0x1000000));
+                                    if (sumget == sum)  //通讯OK
+                                    { 
+
+                                        for (j = 0; j < 64; j++)
+                                        sINBuffer[j] = INBuffer[j + 1];
+                                        lock (lockobject)
                                         {
-                                            DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                            byte length = sINBuffer[2];
+                                            UInt16 index = BitConverter.ToUInt16(new byte[] { sINBuffer[3], sINBuffer[4] }, 0);
+
+
+                                            if (index < 300)
+                                            {
+                                                for (j = 0; j < 24; j++)
+                                                {
+                                                    revval[index, j] = sINBuffer[5 + j];
+                                                }
+                                                revval[index, j] = 0x10;
+                                                for (j = 0; j < 24; j++)
+                                                {
+                                                    revval[index + 1, j] = sINBuffer[5 + j + 24];
+                                                }
+                                                revval[index + 1, j] = 0x10;
+                                            }
+
+                                            /**/
+                                            if (DicFrames.ContainsKey(index))
+                                            {
+                                                DicFrames[index] = sINBuffer.Skip(5).Take(length - 5 - 4).ToArray();
+                                            }
+                                            else
+                                            {
+                                                DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
+                                            }
                                         }
-                                        else
-                                        {
-                                            DicFrames.Add(index, sINBuffer.Skip(5).Take(length - 5 - 4).ToArray());
-                                        }
-                                        
                                     }
                                 }
-                                CurrentProgressValue += 70 / TotalCount;
                                 Thread.Sleep(5);
                                 Reading = false;
                             }
@@ -1339,72 +1432,7 @@ namespace HID_PnP_Demo
         }
 
 
-
-        //private void FormUpdateTimer_Tick(object sender, EventArgs e)
-        //{
-        //    int i;
-        //    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //    //-------------------------------------------------------BEGIN CUT AND PASTE BLOCK-----------------------------------------------------------------------------------
-        //    //This timer tick event handler function is used to update the user interface on the form, based on data
-        //    //obtained asynchronously by the ReadWriteThread and the WM_DEVICECHANGE event handler functions.
-
-        //    //Check if user interface on the form should be enabled or not, based on the attachment state of the USB device.
-        //    if (AttachedState == true)
-        //    {
-        //        //Device is connected and ready to communicate, enable user interface on the form 
-        //        StatusBox_txtbx.Text = "Device Found: AttachedState = TRUE";
-        //        PushbuttonState_lbl.Enabled = true;	//Make the label no longer greyed out
-        //        ANxVoltage_lbl.Enabled = true;
-        //        // textBox2.Text = "";
-        //        // for(i=0;i<65;i++)
-        //        //   textBox2.Text=textBox2.Text + display[i];
-        //    }
-        //    if ((AttachedState == false) || (AttachedButBroken == true))
-        //    {
-        //        //Device not available to communicate. Disable user interface on the form.
-        //        StatusBox_txtbx.Text = "Device Not Detected: Verify Connection/Correct Firmware";
-        //        PushbuttonState_lbl.Enabled = false;	//Make the label no longer greyed out
-        //        ANxVoltage_lbl.Enabled = false;
-
-        //        PushbuttonState_lbl.Text = "Pushbutton State: Unknown";
-        //        ADCValue = 0;
-        //        progressBar1.Value = 0;
-        //    }
-
-        //    //Update the various status indicators on the form with the latest info obtained from the ReadWriteThread()
-        //    if (AttachedState == true)
-        //    {
-        //        //Update the pushbutton state label.
-        //        if (PushbuttonPressed == false)
-        //            PushbuttonState_lbl.Text = "Pushbutton State: Not Pressed";		//Update the pushbutton state text label on the form, so the user can see the result 
-        //        else
-        //            PushbuttonState_lbl.Text = "Pushbutton State: Pressed";         //Update the pushbutton state text label on the form, so the user can see the result 
-
-        //        //Update the ANxx/POT Voltage indicator value (progressbar)
-        //        // progressBar1.Value = (int)ADCValue;
-        //    }
-        //    //-------------------------------------------------------END CUT AND PASTE BLOCK-------------------------------------------------------------------------------------
-        //    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //}
-
-
-        //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------BEGIN CUT AND PASTE BLOCK-----------------------------------------------------------------------------------
-
-        //--------------------------------------------------------------------------------------------------------------------------
-        //FUNCTION:	ReadFileManagedBuffer()
-        //PURPOSE:	Wrapper function to call ReadFile()
-        //
-        //INPUT:	Uses managed versions of the same input parameters as ReadFile() uses.
-        //
-        //OUTPUT:	Returns boolean indicating if the function call was successful or not.
-        //          Also returns data in the byte[] INBuffer, and the number of bytes read. 
-        //
-        //Notes:    Wrapper function used to call the ReadFile() function.  ReadFile() takes a pointer to an unmanaged buffer and deposits
-        //          the bytes read into the buffer.  However, can't pass a pointer to a managed buffer directly to ReadFile().
-        //          This ReadFileManagedBuffer() is a wrapper function to make it so application code can call ReadFile() easier
-        //          by specifying a managed buffer.
-        //--------------------------------------------------------------------------------------------------------------------------
+        
         public unsafe bool ReadFileManagedBuffer(SafeFileHandle hFile, byte[] INBuffer, uint nNumberOfBytesToRead, ref uint lpNumberOfBytesRead, IntPtr lpOverlapped)
         {
             IntPtr pINBuffer = IntPtr.Zero;
@@ -1703,17 +1731,9 @@ namespace HID_PnP_Demo
             }
         }
 
-        bool ReadCount = false;
-        int TotalCount = 0;
-        private void btGetCount_Click(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            if (!AttachedState)
-            {
-                MessageHelper.ShowError("設備未鏈接，請檢查！");
-                return;
-            }
-            ReadCount = true;
-            TotalCount = 0;
+
             Byte[] OUTBuffer = new byte[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
             Byte[] INBuffer = new byte[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
             uint BytesWritten = 0;
@@ -1738,111 +1758,8 @@ namespace HID_PnP_Demo
                     //  button2_Click(null,null);
                 }
             }
-        }
 
-        private void dgvDataList_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0)
-            {
-                return;
-            }
-            DataGridViewRow row = dgvDataList.Rows[e.RowIndex];
-            textBox1.Text = row.Cells["CNUM"].Value == null ? string.Empty : row.Cells["CNUM"].Value.ToString();
-            textBox2.Text = row.Cells["CDeep"].Value == null ? string.Empty : row.Cells["CDeep"].Value.ToString();
-            textBox3.Text = row.Cells["CPosition"].Value == null ? string.Empty : row.Cells["CPosition"].Value.ToString();
-            textBox4.Text = row.Cells["CZDeep"].Value == null ? string.Empty : row.Cells["CZDeep"].Value.ToString();
-            textBox5.Text = row.Cells["CQinJiao"].Value == null ? string.Empty : row.Cells["CQinJiao"].Value.ToString();
-            textBox6.Text = row.Cells["CSJZT"].Value == null ? string.Empty : row.Cells["CSJZT"].Value.ToString();
-        }
-
-        private void btEdit_Click(object sender, EventArgs e)
-        {
-            
-            var items= ReadResult.Where(p => textBox1.Text.Equals(p.GH.ToString()));
-            if (items == null|| items.Count()<=0)
-            {
-                MessageHelper.ShowError("找不到数据！");
-            }
-            else
-
-            {
-                var item = items.FirstOrDefault();
-                int deep = 0;
-                float position = 0;
-                float zdeep = 0;
-                float qinjiao = 0;
-                uint sjzt = 0;
-                try
-                {
-                    deep = Convert.ToInt32(textBox2.Text);
-                }
-                catch
-                {
-                    MessageHelper.ShowError("深度必须为整数");
-                    return;
-                }
-                try
-                {
-                    position = Convert.ToSingle(textBox3.Text);
-                }
-                catch
-                {
-                    MessageHelper.ShowError("位置必须为浮点小数");
-                    return;
-                }
-
-                try
-                {
-                    zdeep = Convert.ToSingle(textBox4.Text);
-                }
-                catch
-                {
-                    MessageHelper.ShowError("深度必须为浮点小数");
-                    return;
-                }
-                try
-                {
-                    qinjiao = Convert.ToSingle(textBox5.Text);
-                }
-                catch
-                {
-                    MessageHelper.ShowError("倾角必须为浮点小数");
-                    return;
-                }
-                try
-                {
-                    sjzt = Convert.ToUInt16(textBox6.Text);
-                }
-                catch
-                {
-                    MessageHelper.ShowError("数据状态必须为无符号整数");
-                    return;
-                }
-                
-                item.Deep= deep;
-                item.Position= position ;
-                item.ZDeep= zdeep;
-                item.QingJiao= qinjiao;
-                item.SJZT =sjzt;
-
-                foreach (DataGridViewRow row in dgvDataList.Rows)
-                {
-                    if (row.Cells["CNUM"].Value == null && textBox1.Text.Equals(row.Cells["CNUM"].Value.ToString()))
-                    {
-                        dgvDataList.Invoke(new MethodInvoker(delegate
-                        {
-                            row.Cells["CDeep"].Value = item.Deep.ToString("0.00");
-                            row.Cells["CPosition"].Value = item.Position.ToString("0.00");
-                            row.Cells["CZDeep"].Value = item.ZDeep.ToString("0.00");
-                            row.Cells["CQinJiao"].Value = item.QingJiao.ToString("0.00");
-                            row.Cells["CSJZT"].Value = item.SJZT;
-                        }));
-                    }
-                    
-                }
-                InitChart(); //Refresh();
-            }
-            
+            tb_num.Text = "1111";
         }
 
         private void button7_Click(object sender, EventArgs e)
